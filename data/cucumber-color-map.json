@@ -1,0 +1,9 @@
+{
+  "comment": "gray",
+  "failed": "red",
+  "passed": "green",
+  "pending": "yellow",
+  "skipped": "cyan",
+  "tag": "cyan",
+  "undefined": "yellow"
+}
