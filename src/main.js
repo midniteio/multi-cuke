@@ -12,11 +12,11 @@ if (!module.parent) {
 }
 
 // Run if invoked from being required by another modules with passed args
-module.exports = function(options) {
-  return run(options || {});
+module.exports = function(options, envVars) {
+  return run(options || {}, envVars);
 };
 
-function run(options) {
+function run(options, envVars) {
   _.defaults(options, {
     'paths': ['features'],
     'tags': [],
@@ -25,11 +25,11 @@ function run(options) {
     'workers': require('os').cpus().length,
     'logDir': ".tmp-logs"
   });
-  
+
   fs.ensureDir(options.logDir);
-  
-  let cukeRunner = new TestHandler(options);
+
+  let cukeRunner = new TestHandler(options, envVars);
   sigintHandler(cukeRunner);
-  
+
   return cukeRunner.run();
 }

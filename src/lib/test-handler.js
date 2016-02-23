@@ -9,16 +9,17 @@ import Promise from 'bluebird'
 let maxWorkers = cpus().length;
 
 export default class TestHandler {
-  constructor(options) {
+  constructor(options, envVars) {
     this.outputHandler = new OutputHandler();
     this.workers = [];
     this.scenarios = [];
     this.options = options;
+    this.envVars = envVars;
   }
-  
-  run() { 
+
+  run() {
     return this.runTestSuite().then(() => {
-      return this.waitForChildren(); 
+      return this.waitForChildren();
     });
   }
 
@@ -27,16 +28,16 @@ export default class TestHandler {
       if (_.isEmpty(scenarios)) {
         console.log('There are no scenarios found that match the options passed: \n', this.options);
       }
-      
+
       this.scenarios = scenarios;
       for (var i = 0; i < Math.min(this.options.workers, 5); i++) {
         if (!_.isEmpty(scenarios)) {
-          this.createWorker(scenarios.shift(), this.options);
+          this.createWorker(scenarios.shift());
         }
       }
     });
   }
-    
+
   waitForChildren() {
     return Promise.delay(500)
       .then(() => {
@@ -48,13 +49,14 @@ export default class TestHandler {
       });
   }
 
-  createWorker(scenario, options) {
+  createWorker(scenario) {
     let workerModulePath = path.join(__dirname, 'worker');
     let worker_env = _.merge(
       scenario,
-      { testOptions: JSON.stringify(options) }
+      { testOptions: JSON.stringify(this.options) },
+      this.envVars
     );
-    let worker = fork(workerModulePath, [], { 
+    let worker = fork(workerModulePath, [], {
       env: worker_env,
       silent: true
     });
@@ -67,7 +69,7 @@ export default class TestHandler {
 
     worker.on('exit', (code, signal) => {
       _.pull(this.workers, worker)
-      
+
       if (!_.isEmpty(this.scenarios)) {
         this.workers.push(this.createWorker(this.scenarios.shift()));
       }
@@ -80,7 +82,7 @@ export default class TestHandler {
     worker.on('error', (worker, error) => {
       console.log('Error caught: ', error);
     });
-    
+
     return worker;
   }
 
