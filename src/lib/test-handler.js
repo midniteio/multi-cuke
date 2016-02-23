@@ -14,7 +14,6 @@ export default class TestHandler {
     this.workers = [];
     this.scenarios = [];
     this.options = options;
-    this.envVars = envVars;
   }
 
   run() {
@@ -30,7 +29,7 @@ export default class TestHandler {
       }
 
       this.scenarios = scenarios;
-      for (var i = 0; i < Math.min(this.options.workers, 5); i++) {
+      for (var i = 0; i < Math.min(this.options.workers, maxWorkers); i++) {
         if (!_.isEmpty(scenarios)) {
           this.createWorker(scenarios.shift());
         }
@@ -42,7 +41,7 @@ export default class TestHandler {
     return Promise.delay(500)
       .then(() => {
         if (_.isEmpty(this.scenarios) && _.isEmpty(this.workers)) {
-          return;
+          return this.outputHandler.scenarioStatuses.failed.length;
         } else {
           return this.waitForChildren();
         }
@@ -54,7 +53,7 @@ export default class TestHandler {
     let worker_env = _.merge(
       scenario,
       { testOptions: JSON.stringify(this.options) },
-      this.envVars
+      this.options.workerEnvVars
     );
     let worker = fork(workerModulePath, [], {
       env: worker_env,

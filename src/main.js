@@ -13,22 +13,23 @@ if (!module.parent) {
 
 // Run if invoked from being required by another modules with passed args
 module.exports = function(options, envVars) {
-  return run(options || {}, envVars);
+  return run(options || {});
 };
 
-function run(options, envVars) {
+function run(options) {
   _.defaults(options, {
     'paths': ['features'],
     'tags': [],
     'requires': [],
     'cucumberPath': require.resolve("cucumber"),
     'workers': require('os').cpus().length,
-    'logDir': ".tmp-logs"
+    'logDir': ".tmp-logs",
+    'workerEnvVars': {}
   });
 
   fs.ensureDir(options.logDir);
 
-  let cukeRunner = new TestHandler(options, envVars);
+  let cukeRunner = new TestHandler(options);
   sigintHandler(cukeRunner);
 
   return cukeRunner.run();

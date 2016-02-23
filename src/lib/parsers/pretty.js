@@ -37,12 +37,12 @@ export default class PrettyParser {
     let logFileJSON = fs.readJsonSync(resultsFile);
     let feature = logFileJSON.pop();
     let featureFile = path.basename(feature.uri)
-    let scenario = _.takeWhile(feature.elements, ['type', 'scenario']).pop();
+    let scenario = _.filter(feature.elements, ['type', 'scenario']).pop();
     let tagsArray = _.map(scenario.tags, 'name');
-    
+
     let maxStepLength = findMaxStepTitleLength(scenario.steps);
     let passed = true;
-    
+
     buffer.log('Feature: ' + feature.name);
     if (!_.isEmpty(tagsArray)) {
       buffer.log(colorize(indent(1) + tagsArray.join(' '), colorMap.tag));
@@ -75,10 +75,10 @@ export default class PrettyParser {
 
       if (this.stepStatuses[step.result.status]) {
         this.stepStatuses[step.result.status]++;
-      } else { 
+      } else {
         this.stepStatuses[step.result.status] = 1;
       }
-      
+
       this.totalSteps++;
     });
 
@@ -118,7 +118,7 @@ export default class PrettyParser {
     let endDuration = new Date() - this.startTime;
     let pluralize = (this.totalScenarios === 1) ? 'scenario' : 'scenarios';
     let stepDescription = (this.totalSteps > 0) ? ' steps (' + statusToString(this.stepStatuses) + ')' : ' steps';
-    let percentGain = (this.totalDuration === 0) ? 'N/A' : Math.round((endDuration / this.totalDuration) * 100) + '%';
+    let percentGain = (this.totalDuration === 0) ? 'N/A' : Math.round((this.totalDuration/ endDuration) * 100) + '%';
 
     if (!_.isEmpty(this.failedScenarios)) {
       console.log(colorize('Failed scenarios:', colorMap.failed));
@@ -133,9 +133,9 @@ export default class PrettyParser {
     console.log('%s %s (%s)', this.totalScenarios, pluralize, statusToString(this.scenarioStatuses));
     console.log(this.totalSteps + stepDescription);
     console.log(
-      'Total duration: %s (%s if ran in series - %s gain)',
+      'Total duration: %s (%s if ran in series - %s spped increase via parallelization)',
       prettyMs(endDuration),
-      prettyMs(this.totalDuration / 1000000),
+      prettyMs(this.totalDuration),
       percentGain
     );
   }
