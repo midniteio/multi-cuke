@@ -133,7 +133,7 @@ export default class PrettyParser {
     console.log('%s %s (%s)', this.totalScenarios, pluralize, statusToString(this.scenarioStatuses));
     console.log(this.totalSteps + stepDescription);
     console.log(
-      'Total duration: %s (%s if ran in series - %s spped increase via parallelization)',
+      'Total duration: %s (%s if ran in series - %s speed increase via parallelization)',
       prettyMs(endDuration),
       prettyMs(this.totalDuration),
       percentGain
