@@ -5,5 +5,6 @@
   "pending": "yellow",
   "skipped": "cyan",
   "tag": "cyan",
-  "undefined": "yellow"
+  "undefined": "yellow",
+  "ambiguous": "purple"
 }
