@@ -1,8 +1,7 @@
 import path from 'path'
-import fs from 'fs-extra'
 
 const testOptions = JSON.parse(process.env.testOptions);
-const cucumber = require(testOptions.cucumberPath);
+const cucumber = require(testOptions.cucumberPath).Cli;
 
 const featureFile = process.env.featureFile;
 const featureFileData = path.parse(process.env.featureFile);
@@ -22,7 +21,7 @@ testOptions.requires.forEach(function(arg) {
 let startTime = new Date();
 
 try {
-  cucumber.Cli(args).run(function() {
+  cucumber(args).run(function() {
     process.send({
       exitCode: 0,
       resultFile: logFile,

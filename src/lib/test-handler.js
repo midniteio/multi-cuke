@@ -9,17 +9,22 @@ import Promise from 'bluebird'
 let maxWorkers = cpus().length;
 
 export default class TestHandler {
-  constructor(options, envVars) {
+  constructor(options) {
     this.outputHandler = new OutputHandler();
     this.workers = [];
     this.scenarios = [];
     this.options = options;
+    this.overallExitCode = 0;
   }
 
   run() {
-    return this.runTestSuite().then(() => {
-      return this.waitForChildren();
-    });
+    return this.runTestSuite()
+      .then(() => {
+        return this.waitForChildren();
+      })
+      .then(() => {
+        return this.overallExitCode;
+      })
   }
 
   runTestSuite() {
@@ -50,13 +55,13 @@ export default class TestHandler {
 
   createWorker(scenario) {
     let workerModulePath = path.join(__dirname, 'worker');
-    let worker_env = _.merge(
+    let workerEnv = _.merge(
       scenario,
       { testOptions: JSON.stringify(this.options) },
       this.options.workerEnvVars
     );
     let worker = fork(workerModulePath, [], {
-      env: worker_env,
+      env: workerEnv,
       silent: true
     });
 
@@ -66,7 +71,7 @@ export default class TestHandler {
       this.outputHandler.handleMessage(payload)
     });
 
-    worker.on('exit', (code, signal) => {
+    worker.on('exit', (code) => {
       _.pull(this.workers, worker)
 
       if (!_.isEmpty(this.scenarios)) {
@@ -75,6 +80,10 @@ export default class TestHandler {
 
       if (_.isEmpty(this.scenarios) && _.isEmpty(this.workers)) {
         this.outputHandler.outputSummary();
+      }
+
+      if (code !== 0) {
+        this.overallExitCode = 1;
       }
     });
 

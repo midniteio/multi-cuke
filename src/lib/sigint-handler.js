@@ -15,12 +15,12 @@ export default function(handler) {
     handler.kill();
     process.exit();
   });
-    
-  process.on('exit', function() { 
+
+  process.on('exit', function() {
     handler.kill();
   });
 
-  process.on('uncaughtException', function(e) { 
+  process.on('uncaughtException', function(e) {
     console.error('Unhandled exception, terminating all worker processes...');
     console.error(e.stack);
     handler.kill();

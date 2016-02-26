@@ -7,7 +7,6 @@ import _ from 'lodash'
 
 let promiseGlob = Promise.promisify(glob);
 let gherkinParser = new Gherkin.Parser();
-let allScenarios = [];
 
 export default function(cucumberOptions) {
   return Promise.map(cucumberOptions.paths, (featurePath) => {
@@ -23,22 +22,7 @@ export default function(cucumberOptions) {
       let featureData = parseFeature(file);
       return featureData.scenarioDefinitions
         .filter((scenario) => {
-          let scenarioTags = _.map(scenario.tags, 'name');
-          let positiveTags = cucumberOptions.tags.filter((tag) => {
-            return tag[0] !== '~';
-          });
-          let negativeTags = _.difference(cucumberOptions.tags, positiveTags).map((tag) => {
-            return tag.replace('~', '');
-          });
-
-          let positiveMatch = (_.intersection(scenarioTags, positiveTags).length === positiveTags.length);
-          let negativeMatch = _.isEmpty(_.intersection(scenarioTags, negativeTags));
-
-          if (_.isEmpty(negativeTags)) {
-            return positiveMatch;
-          } else {
-            return (positiveMatch && negativeMatch);
-          }
+          return checkTagMatch(scenario, cucumberOptions.tags);
         })
         .map((scenario) => {
           return {
@@ -60,5 +44,24 @@ function parseFeature(featurePath) {
   } catch (e) {
     console.log(featurePath + ' could not be parsed from Gherkin, ignoring as a feature file.', e);
     return {scenarioDefinitions: []};
+  }
+}
+
+function checkTagMatch(scenario, tags) {
+  let scenarioTags = _.map(scenario.tags, 'name');
+  let positiveTags = tags.filter((tag) => {
+    return tag[0] !== '~';
+  });
+  let negativeTags = _.difference(tags, positiveTags).map((tag) => {
+    return tag.replace('~', '');
+  });
+
+  let positiveMatch = (_.intersection(scenarioTags, positiveTags).length === positiveTags.length);
+  let negativeMatch = _.isEmpty(_.intersection(scenarioTags, negativeTags));
+
+  if (_.isEmpty(negativeTags)) {
+    return positiveMatch;
+  } else {
+    return (positiveMatch && negativeMatch);
   }
 }

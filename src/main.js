@@ -12,7 +12,7 @@ if (!module.parent) {
 }
 
 // Run if invoked from being required by another modules with passed args
-module.exports = function(options, envVars) {
+module.exports = function(options) {
   return run(options || {});
 };
 

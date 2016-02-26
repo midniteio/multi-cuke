@@ -9,7 +9,7 @@ import {colorize, indent, buffer} from '../../utils/unix'
 const gherkinParser = new Gherkin.Parser();
 
 export default class PrettyParser {
-  constructor(startTime) {
+  constructor() {
     this.startTime = new Date();
     this.totalSteps = 0;
     this.totalScenarios = 0;
@@ -69,7 +69,7 @@ export default class PrettyParser {
         buffer.log(colorize(indent(2) + step.result.error_message + '\n', 'red'));
       }
 
-      if (step.result.status.toLowerCase() === 'undefined' && !_.includes(this.undefinedSteps, step.keyword + step.name)) {
+      if (step.result.status.toLowerCase() === 'undefined') {
         this.undefinedSteps.push(step.keyword + step.name);
       }
 
@@ -118,7 +118,7 @@ export default class PrettyParser {
     let endDuration = new Date() - this.startTime;
     let pluralize = (this.totalScenarios === 1) ? 'scenario' : 'scenarios';
     let stepDescription = (this.totalSteps > 0) ? ' steps (' + statusToString(this.stepStatuses) + ')' : ' steps';
-    let percentGain = (this.totalDuration === 0) ? 'N/A' : Math.round((this.totalDuration/ endDuration) * 100) + '%';
+    let percentGain = (this.totalDuration === 0) ? 'N/A' : Math.round((this.totalDuration / endDuration) * 100) + '%';
 
     if (!_.isEmpty(this.failedScenarios)) {
       console.log(colorize('Failed scenarios:', colorMap.failed));
@@ -127,7 +127,7 @@ export default class PrettyParser {
 
     if (!_.isEmpty(this.undefinedSteps)) {
       console.log(colorize('Undefined steps:', colorMap.undefined));
-      console.log(colorize(this.undefinedSteps.join('\n'), colorMap.undefined) + '\n');
+      console.log(colorize(_.uniq(this.undefinedSteps).join('\n'), colorMap.undefined) + '\n');
     }
 
     console.log('%s %s (%s)', this.totalScenarios, pluralize, statusToString(this.scenarioStatuses));
