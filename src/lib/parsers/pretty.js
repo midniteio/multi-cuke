@@ -1,4 +1,5 @@
 import path from 'path'
+import util from 'util'
 import fs from 'fs-extra'
 import prettyMs from 'pretty-ms'
 import _ from 'lodash'
@@ -9,11 +10,11 @@ import {colorize, indent, buffer} from '../../utils/unix'
 const gherkinParser = new Gherkin.Parser();
 
 export default class PrettyParser {
-  constructor() {
+  constructor(options) {
+    this.silentSummary = options.silentSummary;
     this.startTime = new Date();
     this.totalSteps = 0;
     this.totalScenarios = 0;
-    this.passedScenarios = 0;
     this.totalDuration = 0;
     this.stepStatuses = {};
     this.scenarioStatuses = {
@@ -22,14 +23,15 @@ export default class PrettyParser {
     };
     this.failedScenarios = [];
     this.undefinedSteps = [];
+    this.endTime;
   }
 
   handleMessage(payload) {
     this.totalDuration += payload.duration;
     if (payload.exitCode === 0) {
-      this.parseMessage(payload.resultFile);
+      return this.parseMessage(payload.resultFile);
     } else {
-      this.parseException(payload.featureFile, payload.exception);
+      return this.parseException(payload.featureFile, payload.scenarioLine, payload.exception);
     }
   }
 
@@ -89,14 +91,18 @@ export default class PrettyParser {
       this.scenarioStatuses.failed++;
     }
 
-    console.log(buffer.dump());
     this.totalScenarios++;
+
+    return buffer.dump();
   }
 
-  parseException(featureFile, exception) {
+  parseException(featureFile, scenarioLine, exception) {
     let file = fs.readFileSync(featureFile, { encoding: 'utf8' });
     let feature = gherkinParser.parse(file);
-    let scenario = feature.scenarioDefinitions.pop();
+
+    let scenario = feature.scenarioDefinitions.filter((scenario) => {
+      return (scenario.location.line === scenarioLine);
+    }).pop();
 
     buffer.log('Feature: ' + feature.name);
 
@@ -107,37 +113,54 @@ export default class PrettyParser {
 
     buffer.log(indent(1) + 'Scenario: ' + scenario.name);
     buffer.log(colorize(indent(1) + exception, 'red'));
-    console.log(buffer.dump());
 
-    this.failedScenarios.push(path.basename(featureFile) + ':' + scenario.line + ' # ' + scenario.name);
+    this.failedScenarios.push(path.basename(featureFile) + ':' + scenario.location.line + ' # ' + scenario.name);
     this.scenarioStatuses.failed++;
     this.totalScenarios++;
+
+    return buffer.dump();
   }
 
-  outputSummary() {
-    let endDuration = new Date() - this.startTime;
+  getSummaryOutput() {
+    let endDuration = this.endTime - this.startTime;
     let pluralize = (this.totalScenarios === 1) ? 'scenario' : 'scenarios';
     let stepDescription = (this.totalSteps > 0) ? ' steps (' + statusToString(this.stepStatuses) + ')' : ' steps';
-    let percentGain = (this.totalDuration === 0) ? 'N/A' : Math.round((this.totalDuration / endDuration) * 100) + '%';
+    let percentGain = (this.totalScenarios === 1) ? 'N/A' : Math.round((this.totalDuration / endDuration) * 100) + '%';
 
     if (!_.isEmpty(this.failedScenarios)) {
-      console.log(colorize('Failed scenarios:', colorMap.failed));
-      console.log(colorize(this.failedScenarios.join('\n'), colorMap.failed) + '\n');
+      buffer.log(colorize('Failed scenarios:', colorMap.failed));
+      buffer.log(colorize(this.failedScenarios.join('\n'), colorMap.failed) + '\n');
     }
 
     if (!_.isEmpty(this.undefinedSteps)) {
-      console.log(colorize('Undefined steps:', colorMap.undefined));
-      console.log(colorize(_.uniq(this.undefinedSteps).join('\n'), colorMap.undefined) + '\n');
+      buffer.log(colorize('Undefined steps:', colorMap.undefined));
+      buffer.log(colorize(_.uniq(this.undefinedSteps).join('\n'), colorMap.undefined) + '\n');
     }
 
-    console.log('%s %s (%s)', this.totalScenarios, pluralize, statusToString(this.scenarioStatuses));
-    console.log(this.totalSteps + stepDescription);
-    console.log(
-      'Total duration: %s (%s if ran in series - %s speed increase via parallelization)',
-      prettyMs(endDuration),
-      prettyMs(this.totalDuration),
-      percentGain
+    buffer.log(
+      util.format('%s %s (%s)', this.totalScenarios, pluralize, statusToString(this.scenarioStatuses))
     );
+
+    buffer.log(this.totalSteps + stepDescription);
+
+    buffer.log(
+      util.format(
+        'Total duration: %s (%s if ran in series - %s speed increase via parallelization)',
+        prettyMs(endDuration),
+        prettyMs(this.totalDuration),
+        percentGain
+      )
+    );
+
+    if (!this.silentSummary) {
+      console.log(buffer.data);
+    }
+
+    return buffer.dump();
+  }
+
+  setEndTime() {
+    this.endTime = new Date();
   }
 }
 

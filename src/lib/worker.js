@@ -33,6 +33,7 @@ try {
     exitCode: 1,
     exception: e.stack,
     featureFile: featureFile,
+    scenarioLine: scenarioLine,
     duration: new Date() - startTime
   });
 }

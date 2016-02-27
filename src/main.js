@@ -6,8 +6,9 @@ import sigintHandler from './lib/sigint-handler'
 
 // Run if invoked from command line with CLI args
 if (!module.parent) {
-  run(cliOptions).then(function(exitCode) {
-    process.exit(exitCode);
+  run(cliOptions).then((results) => {
+    console.log(results.outputHandler.getSummaryOutput());
+    process.exit(results.exitCode);
   });
 }
 
@@ -24,7 +25,8 @@ function run(options) {
     'cucumberPath': require.resolve("cucumber"),
     'workers': require('os').cpus().length,
     'logDir': ".tmp-logs",
-    'workerEnvVars': {}
+    'workerEnvVars': {},
+    'silentSummary': false
   });
 
   fs.ensureDir(options.logDir);

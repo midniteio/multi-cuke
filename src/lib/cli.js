@@ -21,6 +21,7 @@ program
   .option('-c, --cucumber <path>', 'Path to specific cucumber installation')
   .option('-w, --workers <int>', 'Number of workers (Defaults to # Processors)', parseInt)
   .option('-l, --logdir <path>', 'Output dir for test logs')
+  .option('-s, --silentsummary', 'Silences summary output so it can be handled via the returned promise')
   .parse(process.argv);
 
 let args = {
@@ -29,7 +30,8 @@ let args = {
   requires: (program.require.length) ? program.require : undefined,
   cucumberPath: program.cucumber,
   workers: program.workers,
-  logdir: program.logdir
+  logdir: program.logdir,
+  silentSummary: program.silentsummary
 };
 
 export default _.omitBy(args, _.isUndefined);

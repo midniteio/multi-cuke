@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "totalSteps": 2,
+  "stepStatuses": {
+    "undefined": 2
+  },
+  "undefinedSteps": [
+    "Given I am a test",
+    "Then I am a step"
+  ],
+  "duration": null,
+  "name": "Sample Scenario 2",
+  "feature": "Sample Feature 1",
+  "file": "sample.feature",
+  "line": 11,
+  "output": "Feature: Sample Feature 1\n\u001b[36m  @UnitTest @Ignore\u001b[0m\n  Scenario: Sample Scenario 2\n\u001b[33m    Given I am a test  \u001b[0m\u001b[2m\u001b[37m#sample.feature:4\u001b[0m\n\u001b[33m    Then I am a step   \u001b[0m\u001b[2m\u001b[37m#sample.feature:12\u001b[0m\n"
+}
