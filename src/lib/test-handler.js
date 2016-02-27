@@ -10,11 +10,12 @@ let maxWorkers = cpus().length;
 
 export default class TestHandler {
   constructor(options) {
-    this.outputHandler = new OutputHandler();
+    this.outputHandler = new OutputHandler({ silentSummary: options.silentSummary });
     this.workers = [];
     this.scenarios = [];
     this.options = options;
     this.overallExitCode = 0;
+    this.summaryData = {};
   }
 
   run() {
@@ -23,7 +24,10 @@ export default class TestHandler {
         return this.waitForChildren();
       })
       .then(() => {
-        return this.overallExitCode;
+        return {
+          exitCode: this.overallExitCode,
+          outputHandler: this.outputHandler
+        };
       })
   }
 
@@ -68,10 +72,15 @@ export default class TestHandler {
     this.workers.push(worker);
 
     worker.on('message', (payload) => {
-      this.outputHandler.handleMessage(payload)
+      let output = this.outputHandler.handleMessage(payload);
+      console.log(output);
+
+      if (payload.code !== 0) {
+        this.overallExitCode = 1;
+      }
     });
 
-    worker.on('exit', (code) => {
+    worker.on('exit', () => {
       _.pull(this.workers, worker)
 
       if (!_.isEmpty(this.scenarios)) {
@@ -79,11 +88,7 @@ export default class TestHandler {
       }
 
       if (_.isEmpty(this.scenarios) && _.isEmpty(this.workers)) {
-        this.outputHandler.outputSummary();
-      }
-
-      if (code !== 0) {
-        this.overallExitCode = 1;
+        this.outputHandler.setEndTime();
       }
     });
 

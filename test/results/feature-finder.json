@@ -1,0 +1,96 @@
+{
+  "default": [
+    {
+      "featureFile": "test/features/sample.feature",
+      "scenarioLine": 7
+    },
+    {
+      "featureFile": "test/features/sample.feature",
+      "scenarioLine": 11
+    },
+    {
+      "featureFile": "test/features/sample.feature",
+      "scenarioLine": 14
+    },
+    {
+      "featureFile": "test/features/sample2.feature",
+      "scenarioLine": 4
+    }
+  ],
+  "tagged": [
+    {
+      "featureFile": "test/features/sample.feature",
+      "scenarioLine": 7
+    },
+    {
+      "featureFile": "test/features/sample.feature",
+      "scenarioLine": 11
+    },
+    {
+      "featureFile": "test/features/sample2.feature",
+      "scenarioLine": 4
+    }
+  ],
+  "negatedTag": [
+    {
+      "featureFile": "test/features/sample.feature",
+      "scenarioLine": 7
+    },
+    {
+      "featureFile": "test/features/sample.feature",
+      "scenarioLine": 14
+    },
+    {
+      "featureFile": "test/features/sample2.feature",
+      "scenarioLine": 4
+    }
+  ],
+  "multipleTags": [
+    {
+      "featureFile": "test/features/sample.feature",
+      "scenarioLine": 7
+    }
+  ],
+  "mixedTags": [
+    {
+      "featureFile": "test/features/sample.feature",
+      "scenarioLine": 7
+    },
+    {
+      "featureFile": "test/features/sample2.feature",
+      "scenarioLine": 4
+    }
+  ],
+  "featurePath": [
+    {
+      "featureFile": "test/features/sample.feature",
+      "scenarioLine": 7
+    },
+    {
+      "featureFile": "test/features/sample.feature",
+      "scenarioLine": 11
+    },
+    {
+      "featureFile": "test/features/sample.feature",
+      "scenarioLine": 14
+    }
+  ],
+  "multiplePaths": [
+    {
+      "featureFile": "test/features/sample.feature",
+      "scenarioLine": 7
+    },
+    {
+      "featureFile": "test/features/sample.feature",
+      "scenarioLine": 11
+    },
+    {
+      "featureFile": "test/features/sample.feature",
+      "scenarioLine": 14
+    },
+    {
+      "featureFile": "test/features/sample2.feature",
+      "scenarioLine": 4
+    }
+  ]
+}

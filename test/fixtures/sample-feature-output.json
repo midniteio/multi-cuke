@@ -1,0 +1,64 @@
+[
+  {
+    "id": "Sample-Feature-1",
+    "name": "Sample Feature 1",
+    "description": "",
+    "line": 1,
+    "keyword": "Feature",
+    "uri": "/Users/ifleming/Dev/midniteio/cuke-cluster/test/features/sample.feature",
+    "elements": [
+      {
+        "name": "",
+        "keyword": "Background",
+        "description": "",
+        "type": "background",
+        "line": 3,
+        "steps": [
+          {
+            "name": "I am a test",
+            "line": 4,
+            "keyword": "Given "
+          }
+        ]
+      },
+      {
+        "name": "Sample Scenario 1",
+        "id": "Sample-Feature-1;sample-scenario-1",
+        "line": 7,
+        "keyword": "Scenario",
+        "description": "",
+        "type": "scenario",
+        "tags": [
+          {
+            "name": "@UnitTest",
+            "line": 6
+          },
+          {
+            "name": "@Secondary",
+            "line": 6
+          }
+        ],
+        "steps": [
+          {
+            "name": "I am a test",
+            "line": 4,
+            "keyword": "Given ",
+            "result": {
+              "status": "undefined"
+            },
+            "match": {}
+          },
+          {
+            "name": "I am a step",
+            "line": 8,
+            "keyword": "Then ",
+            "result": {
+              "status": "undefined"
+            },
+            "match": {}
+          }
+        ]
+      }
+    ]
+  }
+]

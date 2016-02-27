@@ -4,7 +4,7 @@
 It utilizes the Gherkin JS module as a parser to determine the entire set of scenarios that fit the passed arguments and spins up workers to run each- up to the number of available OS processor, or alternatively the passed number of workers (lesser of the two). As a test worker ends, a new worker is spun up to handle the next scenario on the stack, until empty.
 
 ### Developing with multi-cuke ###
-multi-cuke is written in es6 that is transpiled via Babel. This happens on npm-install, where the compiled code is output to the `distribution` folder. If making changes, `npm run build` will re-compile the code.
+multi-cuke is written in es6 that is transpiled via Babel. This happens on npm-install, where the compiled code is output to the `distribution` folder. If making changes, `npm run build` will re-compile the code. multi-cuke uses travis-ci for linting and unit testing, which performs `npm test` on all PR's prior to merging with the expectation that they pass.
 
 ### Using multi-cuke from another Node module
 multi-cuke is easily called from within your NodeJS source like any other NPM module:
@@ -12,7 +12,7 @@ multi-cuke is easily called from within your NodeJS source like any other NPM mo
 const multicuke = require('multi-cuke');
 multicuke();
 ```
-multi-cuke is Promise-based, and resolves a promise containing the exit code when all have finished running. Running from the command line will auto-exit with the returned exit code, while calling multi-cuke from a node module returns the promise that resolves to an exit code to be handled at your discretion. The promise is **not** rejected due to test scenario failures, but **is** rejected on errors in test execution to differentiate and provide clarity.
+multi-cuke is Promise-based, and resolves a promise containing the exit code and the outputHandler when all have finished running. The outputHandler is returned as the summary data of the overall test suite run can be used in conjuction with other runs, if you would like to amass data across different test suites (See below for options and command-line args). Running from the command line will output the summary data then auto-exit with the returned exit code, while calling multi-cuke from a node module returns the promise that resolves to an exit code to be handled at your discretion. The promise is **not** rejected due to test scenario failures, but **is** rejected on errors in test execution to differentiate and provide clarity.
 
 
 multi-cuke takes an options object as a parameter, but when none is passed will default to standard options, which are:
@@ -24,7 +24,8 @@ multi-cuke takes an options object as a parameter, but when none is passed will 
   'cucumberPath': require.resolve("cucumber"),
   'workers': require('os').cpus().length,
   'workerEnvVars': {},
-  'logDir': '.tmp-logs'
+  'logDir': '.tmp-logs',
+  'silentSummary': false
 }
 ```
 The options object passed is extended with default values via lodash's `_.default()` utility, so passing all options are not required, and passing simply
@@ -42,15 +43,40 @@ is as valid as passing all options.
 
 `workerEnvVars` is an object that will be passed as environment variables to the cucumber-js worker process, and it's properties will be available to access in the forked process via process.env.
 
+The `silentSummary` option silences the default output of summary data when all tests cases resolve. This is an optional flag so that output summary can be handled or transformed at a later time via the returned object in the promise. An example:
+
+```javascript
+const multicuke = require('multi-cuke');
+multicuke().then((results) => {
+  // results.outputHandler is the parser defined for this test
+  console.log(results.outputHandler.getSummaryOutput());
+});
+
+```
+
+Or to combine data of multiple test suites (via tags):
+```javascript
+const multicuke = require('multi-cuke');
+
+Promise.all([
+  multicuke({ tags: ['@Blocker'] }),
+  multicuke({ tags: ['@LowUserPath'] })
+]).then((results) => {
+  // Deal with results ...
+});
+
+```
+
 ### Using multi-cuke from command line
 multi-cuke comes ready to use from command line. It supports arguments of both feature paths and directory paths that contain features (including multiple paths), as well as the following tags:
 ```
 
-  -t, --tag       Scenario tag, as defined by cucumber-js
-  -r, --require   Require flag, to specify non-default files to require, as defined by cucumber-js
-  -c, --cucumber  Specify using a specific cucumber installation
-  -w, --workers   Number of workers in parallel at a given time (defaults to the number of processors if none passed).
-  -l, --logdir    Output dir for test logs;
+  -t, --tag               Scenario tag, as defined by cucumber-js
+  -r, --require           Require flag, to specify non-default files to require, as defined by cucumber-js
+  -c, --cucumber          Specify using a specific cucumber installation
+  -w, --workers           Number of workers in parallel at a given time (defaults to the number of processors if none passed).
+  -l, --logdir            Output dir for test logs
+  -s, --silent-summary    Silences summary output so it can be handled via the returned promise
 
 ```
 All of the above options can also be found by using the `--help` flag on the command line.
