@@ -1,6 +1,6 @@
 {
   "name": "multi-cuke",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Forked Cucumber-js for parallel tesing",
   "main": "distribution/main.js",
   "scripts": {
