@@ -1,11 +1,12 @@
 import fs from 'fs-extra'
 import _ from 'lodash'
 import TestHandler from './lib/test-handler'
-import cliOptions from './lib/cli'
 import sigintHandler from './lib/sigint-handler'
 
 // Run if invoked from command line with CLI args
 if (!module.parent) {
+  let cliOptions = require('./lib/cli');
+
   run(cliOptions).then((results) => {
     console.log(results.outputHandler.getSummaryOutput());
     process.exit(results.exitCode);
