@@ -15,8 +15,8 @@ describe('Test Handler', function() {
 
     let cukeRunner = new TestHandler(opts);
 
-    cukeRunner.run().then(() => {
-      cukeRunner.workers.should.be.empty;
+    return cukeRunner.run().then(() => {
+      return cukeRunner.workers.should.be.empty;
     })
   });
 
@@ -47,7 +47,7 @@ describe('Test Handler', function() {
 
     let cukeRunner = new TestHandler(opts);
     return cukeRunner.run().then((results) => {
-      results.should.have.property('outputHandler');
+      return results.should.have.property('outputHandler');
     });
   });
 
@@ -57,7 +57,7 @@ describe('Test Handler', function() {
 
     let cukeRunner = new TestHandler(opts);
     return cukeRunner.run().then((results) => {
-      results.outputHandler.getSummaryOutput().should.not.be.empty;
+      return results.outputHandler.getSummaryOutput().should.not.be.empty;
     });
   });
 
