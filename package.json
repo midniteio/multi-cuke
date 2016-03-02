@@ -1,7 +1,7 @@
 {
   "name": "multi-cuke",
   "version": "0.3.5",
-  "description": "Forked Cucumber-js for parallel tesing",
+  "description": "Forked Cucumber-js for parallel testing",
   "main": "distribution/main.js",
   "scripts": {
     "build": "babel src --presets babel-preset-es2015 --out-dir distribution",
