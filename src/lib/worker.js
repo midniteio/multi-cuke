@@ -21,9 +21,10 @@ testOptions.requires.forEach(function(arg) {
 let startTime = new Date();
 
 try {
-  cucumber(args).run(function() {
+  cucumber(args).run(function(isSuccessful) {
+    let exitCode = (isSuccessful) ? 0 : 1;
     process.send({
-      exitCode: 0,
+      exitCode: exitCode,
       resultFile: logFile,
       duration: new Date() - startTime
     });
