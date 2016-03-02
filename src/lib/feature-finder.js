@@ -22,7 +22,7 @@ export default function(cucumberOptions) {
       let featureData = parseFeature(file);
       return featureData.scenarioDefinitions
         .filter((scenario) => {
-          return checkTagMatch(scenario, cucumberOptions.tags);
+          return verifyTags(scenario, cucumberOptions.tags);
         })
         .map((scenario) => {
           return {
@@ -47,21 +47,28 @@ function parseFeature(featurePath) {
   }
 }
 
-function checkTagMatch(scenario, tags) {
+function verifyTags(scenario, tags) {
   let scenarioTags = _.map(scenario.tags, 'name');
-  let positiveTags = tags.filter((tag) => {
-    return tag[0] !== '~';
-  });
-  let negativeTags = _.difference(tags, positiveTags).map((tag) => {
-    return tag.replace('~', '');
+  var results = _.map(tags, (tag) => {
+    if (tag.indexOf(',') !== 0) {
+      var orOperatorTags = tag.split(',');
+      var tagResults = _.map(orOperatorTags, (orOperatorTag) => {
+        return checkTagMatch(scenarioTags, orOperatorTag);
+      });
+      return _.includes(tagResults, true);
+    } else {
+      return checkTagMatch(scenarioTags, tag);
+    }
   });
 
-  let positiveMatch = (_.intersection(scenarioTags, positiveTags).length === positiveTags.length);
-  let negativeMatch = _.isEmpty(_.intersection(scenarioTags, negativeTags));
+  return !_.includes(_.flattenDeep(results), false);
+}
 
-  if (_.isEmpty(negativeTags)) {
-    return positiveMatch;
+function checkTagMatch(scenarioTags, tag) {
+  if (tag[0] === '~') {
+    tag = tag.replace('~', '');
+    return !_.includes(scenarioTags, tag);
   } else {
-    return (positiveMatch && negativeMatch);
+    return _.includes(scenarioTags, tag);
   }
 }

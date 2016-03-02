@@ -37,7 +37,16 @@
   },
   "mixedTags": {
     "paths": ["test/features"],
-    "tags": ["@UnitTest", "~@Ignore"],
+    "tags": ["@Secondary", "~@Ignore"],
+    "requires": [],
+    "cucumberPath": "../../node_modules/cucumber",
+    "workers": 1,
+    "logDir": ".unit-test-tmp",
+    "silentSummary": true
+  },
+  "orOperatorTags": {
+    "paths": ["test/features"],
+    "tags": ["@Secondary,@UnitTest"],
     "requires": [],
     "cucumberPath": "../../node_modules/cucumber",
     "workers": 1,
