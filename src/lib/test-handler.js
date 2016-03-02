@@ -10,7 +10,7 @@ let maxWorkers = cpus().length;
 
 export default class TestHandler {
   constructor(options) {
-    this.outputHandler = new OutputHandler({ silentSummary: options.silentSummary });
+    this.outputHandler = new OutputHandler();
     this.workers = [];
     this.scenarios = [];
     this.options = options;
@@ -89,6 +89,10 @@ export default class TestHandler {
 
       if (_.isEmpty(this.scenarios) && _.isEmpty(this.workers)) {
         this.outputHandler.setEndTime();
+
+        if (!this.silentSummary) {
+          console.log(this.outputHandler.getSummaryOutput());
+        }
       }
     });
 

@@ -10,8 +10,7 @@ import {colorize, indent, buffer} from '../../utils/unix'
 const gherkinParser = new Gherkin.Parser();
 
 export default class PrettyParser {
-  constructor(options) {
-    this.silentSummary = options.silentSummary;
+  constructor() {
     this.startTime = new Date();
     this.totalSteps = 0;
     this.totalScenarios = 0;
@@ -151,10 +150,6 @@ export default class PrettyParser {
         percentGain
       )
     );
-
-    if (!this.silentSummary) {
-      console.log(buffer.data);
-    }
 
     return buffer.dump();
   }
