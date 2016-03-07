@@ -1,5 +1,6 @@
 import fs from 'fs-extra'
 import _ from 'lodash'
+import Promise from 'bluebird'
 import TestHandler from './lib/test-handler'
 import sigintHandler from './lib/sigint-handler'
 
@@ -8,7 +9,9 @@ if (!module.parent) {
   let cliOptions = require('./lib/cli');
 
   run(cliOptions).then((results) => {
-    console.log(results.outputHandler.getSummaryOutput());
+    if (results.outputHandler) {
+      console.log(results.outputHandler.getSummaryOutput());
+    }
     process.exit(results.exitCode);
   });
 }
@@ -30,10 +33,31 @@ function run(options) {
     'silentSummary': false
   });
 
-  fs.ensureDir(options.logDir);
+  if (options.workers === 1) {
+    let cucumber = require(options.cucumberPath).Cli;
+    let args = ['', '', options.paths.join(' ')];
+    options.tags.forEach(function(arg) {
+      args.push('-t');
+      args.push(arg);
+    });
+    options.requires.forEach(function(arg) {
+      args.push('-r');
+      args.push(arg);
+    });
 
-  let cukeRunner = new TestHandler(options);
-  sigintHandler(cukeRunner);
+    return new Promise(function(resolve) {
+      cucumber(args).run(function (isSuccessful) {
+        let exitCode = (isSuccessful) ? 0 : 1;
+        resolve({exitCode: exitCode});
+      });
+    });
 
-  return cukeRunner.run();
+  } else {
+    fs.ensureDir(options.logDir);
+
+    let cukeRunner = new TestHandler(options);
+    sigintHandler(cukeRunner);
+
+    return cukeRunner.run();
+  }
 }

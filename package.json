@@ -1,6 +1,6 @@
 {
   "name": "multi-cuke",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "Forked Cucumber-js for parallel testing",
   "main": "distribution/main.js",
   "scripts": {
@@ -27,7 +27,7 @@
     "babel-register": "^6.5.2",
     "chai": "^3.5.0",
     "chai-as-promised": "^5.2.0",
-    "eslint": "^2.2.0",
+    "eslint": "2.2.0",
     "mocha": "^2.4.5"
   },
   "author": "Ian Fleming <ian@midnite.io>",

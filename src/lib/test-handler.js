@@ -60,9 +60,10 @@ export default class TestHandler {
   createWorker(scenario) {
     let workerModulePath = path.join(__dirname, 'worker');
     let workerEnv = _.merge(
+      process.env,
+      this.options.workerEnvVars,
       scenario,
-      { testOptions: JSON.stringify(this.options) },
-      this.options.workerEnvVars
+      {testOptions: JSON.stringify(this.options)}
     );
     let worker = fork(workerModulePath, [], {
       env: workerEnv,
