@@ -31,7 +31,7 @@ try {
   });
 } catch (e) {
   process.send({
-    exitCode: 1,
+    exitCode: 10,
     exception: e.stack,
     featureFile: featureFile,
     scenarioLine: scenarioLine,

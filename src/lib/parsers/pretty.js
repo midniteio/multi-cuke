@@ -27,7 +27,7 @@ export default class PrettyParser {
 
   handleMessage(payload) {
     this.totalDuration += payload.duration;
-    if (payload.exitCode === 0) {
+    if (payload.exitCode !== 10) {
       return this.parseMessage(payload.resultFile);
     } else {
       return this.parseException(payload.featureFile, payload.scenarioLine, payload.exception);
