@@ -76,7 +76,7 @@ export default class TestHandler {
       let output = this.outputHandler.handleMessage(payload);
       console.log(output);
 
-      if (payload.code !== 0) {
+      if (payload.exitCode !== 0) {
         this.overallExitCode = 1;
       }
     });
