@@ -1,8 +1,8 @@
 {
   "name": "multi-cuke",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Forked Cucumber-js for parallel testing",
-    "repository": {
+  "repository": {
     "type": "git",
     "url": "https://github.com/midniteio/multi-cuke.git"
   },
