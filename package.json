@@ -2,6 +2,19 @@
   "name": "multi-cuke",
   "version": "0.4.2",
   "description": "Forked Cucumber-js for parallel testing",
+    "repository": {
+    "type": "git",
+    "url": "https://github.com/midniteio/multi-cuke.git"
+  },
+  "keywords": [
+    "parallel",
+    "test",
+    "cucumber",
+    "cucumber-js",
+    "node",
+    "npm",
+    "javascript"
+  ],
   "main": "distribution/main.js",
   "scripts": {
     "build": "babel src --presets babel-preset-es2015 --out-dir distribution",
