@@ -33,13 +33,12 @@ describe('Pretty parser', function() {
     let parser = new PrettyParser({ silentSummary: true });
     let err = new Error('Test error');
     let output = parser.handleMessage({
-      exitCode: 1,
+      exitCode: 10,
       duration: 100,
       featureFile: featureFile,
       scenarioLine: 7,
       exception: err
-    })
-
+    });
     return Promise.all([
       parser.should.have.deep.property('totalSteps').and.to.be.equal(0),
       parser.should.have.deep.property('totalScenarios').and.to.be.equal(1),
