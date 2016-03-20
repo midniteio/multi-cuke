@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import program from 'commander'
-import _ from 'lodash'
 
 import pkg from '../../package.json'
 
@@ -22,16 +21,21 @@ program
   .option('-w, --workers <int>', 'Number of workers (Defaults to # Processors)', parseInt)
   .option('-l, --logdir <path>', 'Output dir for test logs')
   .option('-s, --silentsummary', 'Silences summary output so it can be handled via the returned promise')
+  .option('-v, --verbose', 'Adds verbose output to console')
+  .option('-i, --inlinestream',
+    'Inlines stream in real time in addition to multi-cuke output\n' +
+    '*Note* This adds complexity to the logs that are hard to decipher, but included if needed for debugging'
+  )
   .parse(process.argv);
 
-let args = {
+export const args = {
   paths: (program.args.length) ? program.args : undefined,
   tags: (program.tag.length) ? program.tag : undefined,
   requires: (program.require.length) ? program.require : undefined,
   cucumberPath: program.cucumber,
   workers: program.workers,
   logdir: program.logdir,
-  silentSummary: program.silentsummary
+  silentSummary: program.silentsummary,
+  verbose: program.verbose,
+  inlineStream: program.inlinestream
 };
-
-export default _.omitBy(args, _.isUndefined);

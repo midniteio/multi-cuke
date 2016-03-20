@@ -7,6 +7,7 @@ import sigintHandler from './lib/sigint-handler'
 // Run if invoked from command line with CLI args
 if (!module.parent) {
   let cliOptions = require('./lib/cli');
+  cliOptions = _.omitBy(cliOptions.args, _.isUndefined);
 
   run(cliOptions).then((results) => {
     if (results.outputHandler) {
@@ -30,7 +31,9 @@ function run(options) {
     'workers': require('os').cpus().length,
     'logDir': ".tmp-logs",
     'workerEnvVars': {},
-    'silentSummary': false
+    'silentSummary': false,
+    'verbose': false,
+    'inlineStream': false
   });
 
   if (options.workers === 1) {
