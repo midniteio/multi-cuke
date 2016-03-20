@@ -1,4 +1,4 @@
-import readline from 'readline'
+import readline from 'readline';
 
 export default function(handler) {
   if (process.platform === "win32") {

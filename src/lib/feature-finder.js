@@ -1,9 +1,9 @@
-import path from 'path'
-import fs from 'fs-extra'
-import Promise from 'bluebird'
-import Gherkin from 'gherkin'
-import glob from 'glob'
-import _ from 'lodash'
+import path from 'path';
+import fs from 'fs-extra';
+import Promise from 'bluebird';
+import Gherkin from 'gherkin';
+import glob from 'glob';
+import _ from 'lodash';
 
 let promiseGlob = Promise.promisify(glob);
 let gherkinParser = new Gherkin.Parser();

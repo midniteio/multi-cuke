@@ -28,4 +28,4 @@ export const buffer = {
     this.data = '';
     return bufferedData;
   }
-}
+};

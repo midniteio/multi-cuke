@@ -1,7 +1,6 @@
 #!/usr/bin/env node
-import program from 'commander'
-
-import pkg from '../../package.json'
+import program from 'commander';
+import pkg from '../../package.json';
 
 function collect(val, collection) {
   collection.push(val);
@@ -23,7 +22,7 @@ program
   .option('-s, --silentsummary', 'Silences summary output so it can be handled via the returned promise')
   .option('-v, --verbose', 'Adds verbose output to console')
   .option('-i, --inlinestream',
-    'Inlines stream in real time in addition to multi-cuke output\n' +
+    'Inlines stream in real time in addition to multi-cuke output. ' +
     '*Note* This adds complexity to the logs that are hard to decipher, but included if needed for debugging'
   )
   .parse(process.argv);
