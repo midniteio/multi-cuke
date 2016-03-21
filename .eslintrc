@@ -209,7 +209,11 @@
 
     // Require one true brace style
     // Reasons: readability, stylistic
-    "brace-style": [2, "1tbs", { "allowSingleLine": true }]
+    "brace-style": [2, "1tbs", { "allowSingleLine": true }],
+
+    // Require semicolon at EOL
+    // Reasons: maintainability
+    "semi": [2, "always"]
   }
 
 }

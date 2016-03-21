@@ -9,7 +9,7 @@ export default class VerboseLogger {
     }
 
     if (typeof output === 'object') {
-      output = JSON.stringify(output, null, 2)
+      output = JSON.stringify(output, null, 2);
     }
 
     let timestamp = new Date().toISOString();

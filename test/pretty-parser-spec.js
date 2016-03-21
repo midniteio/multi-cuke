@@ -11,11 +11,11 @@ const featureOutput = path.join(__dirname, 'fixtures', 'sample-feature-output.js
 describe('Pretty parser', function() {
   it('parser should handle a valid test run and update the tracked properties', function() {
     let parser = new PrettyParser({ silentSummary: true });
-    let output = parser.handleMessage({
+    let output = parser.handleResult({
       exitCode: 0,
       duration: 100,
       resultFile: featureOutput
-    })
+    });
 
     return Promise.all([
       parser.should.have.deep.property('totalSteps').and.to.be.equal(2),
@@ -32,7 +32,7 @@ describe('Pretty parser', function() {
   it('parser should handle a test that ended in an exception', function() {
     let parser = new PrettyParser({ silentSummary: true });
     let err = new Error('Test error');
-    let output = parser.handleMessage({
+    let output = parser.handleResult({
       exitCode: 10,
       duration: 100,
       featureFile: featureFile,
@@ -52,16 +52,16 @@ describe('Pretty parser', function() {
 
   it('parser should aggregate data when additional tests finish', function() {
     let parser = new PrettyParser({ silentSummary: true });
-    parser.handleMessage({
+    parser.handleResult({
       exitCode: 0,
       duration: 100,
       resultFile: featureOutput
-    })
-    parser.handleMessage({
+    });
+    parser.handleResult({
       exitCode: 0,
       duration: 200,
       resultFile: featureOutput
-    })
+    });
 
     return Promise.all([
       parser.should.have.deep.property('totalSteps').and.to.be.equal(4),
@@ -75,7 +75,7 @@ describe('Pretty parser', function() {
 
   it('parser should return summary log', function() {
     let parser = new PrettyParser({ silentSummary: true });
-    parser.handleMessage({
+    parser.handleResult({
       exitCode: 0,
       duration: 100,
       resultFile: featureOutput

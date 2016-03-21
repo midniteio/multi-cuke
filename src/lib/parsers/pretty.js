@@ -1,11 +1,11 @@
-import path from 'path'
-import util from 'util'
-import fs from 'fs-extra'
-import prettyMs from 'pretty-ms'
-import _ from 'lodash'
-import Gherkin from 'gherkin'
-import colorMap from '../../../data/cucumber-color-map'
-import {colorize, indent, buffer} from '../../utils/unix'
+import path from 'path';
+import util from 'util';
+import fs from 'fs-extra';
+import prettyMs from 'pretty-ms';
+import _ from 'lodash';
+import Gherkin from 'gherkin';
+import colorMap from '../../../data/cucumber-color-map';
+import {colorize, indent, buffer} from '../../utils/unix';
 
 const gherkinParser = new Gherkin.Parser();
 
@@ -25,19 +25,19 @@ export default class PrettyParser {
     this.endTime;
   }
 
-  handleMessage(payload) {
+  handleResult(payload) {
     this.totalDuration += payload.duration;
     if (payload.exitCode !== 10) {
-      return this.parseMessage(payload.resultFile);
+      return this.parseResult(payload.resultFile);
     } else {
       return this.parseException(payload.featureFile, payload.scenarioLine, payload.exception);
     }
   }
 
-  parseMessage(resultsFile) {
+  parseResult(resultsFile) {
     let logFileJSON = fs.readJsonSync(resultsFile);
     let feature = logFileJSON.pop();
-    let featureFile = path.basename(feature.uri)
+    let featureFile = path.basename(feature.uri);
     let scenario = _.filter(feature.elements, ['type', 'scenario']).pop();
     let tagsArray = _.map(scenario.tags, 'name');
 

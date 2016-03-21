@@ -1,4 +1,4 @@
-import path from 'path'
+import path from 'path';
 
 const testOptions = JSON.parse(process.env.testOptions);
 const cucumber = require(testOptions.cucumberPath).Cli;
@@ -24,6 +24,7 @@ try {
   cucumber(args).run(function(isSuccessful) {
     let exitCode = (isSuccessful) ? 0 : 1;
     process.send({
+      type: 'result',
       exitCode: exitCode,
       resultFile: logFile,
       duration: new Date() - startTime
@@ -31,6 +32,7 @@ try {
   });
 } catch (e) {
   process.send({
+    type: 'result',
     exitCode: 10,
     exception: e.stack,
     featureFile: featureFile,

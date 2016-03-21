@@ -1,11 +1,11 @@
-import {cpus} from 'os'
-import {fork} from 'child_process'
-import path from 'path'
-import _ from 'lodash'
-import Promise from 'bluebird'
-import OutputHandler from './parsers/pretty'
-import featureFinder from './feature-finder'
-import VerboseLogger from '../utils/verbose-logger'
+import {cpus} from 'os';
+import {fork} from 'child_process';
+import path from 'path';
+import _ from 'lodash';
+import Promise from 'bluebird';
+import OutputHandler from './parsers/pretty';
+import featureFinder from './feature-finder';
+import VerboseLogger from '../utils/verbose-logger';
 
 let maxWorkers = cpus().length;
 
@@ -34,7 +34,7 @@ export default class TestHandler {
           exitCode: this.overallExitCode,
           outputHandler: this.outputHandler
         };
-      })
+      });
   }
 
   runTestSuite() {
@@ -81,20 +81,26 @@ export default class TestHandler {
       silent: !this.options.inlineStream
     });
 
+    worker.debugLogArray = [];
     worker.scenario = scenario;
     this.workers.push(worker);
 
     worker.on('message', (payload) => {
-      let output = this.outputHandler.handleMessage(payload);
-      console.log(output);
+      if (payload.type === 'log') {
+        worker.debugLogArray.push(payload.message);
+      } else if (payload.type === 'result'){
+        let output = this.outputHandler.handleResult(payload);
+        console.log(output);
+        console.log(worker.debugLogArray.join('\n'));
 
-      if (payload.exitCode !== 0) {
-        this.overallExitCode = 1;
+        if (payload.exitCode !== 0) {
+          this.overallExitCode = 1;
+        }
       }
     });
 
     worker.on('exit', () => {
-      _.pull(this.workers, worker)
+      _.pull(this.workers, worker);
 
       if (!_.isEmpty(this.scenarios)) {
         this.verboseLogger.log('Scenarios in progress:');

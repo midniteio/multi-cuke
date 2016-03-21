@@ -25,7 +25,9 @@ multi-cuke takes an options object as a parameter, but when none is passed will 
   'workers': require('os').cpus().length,
   'workerEnvVars': {},
   'logDir': '.tmp-logs',
-  'silentSummary': false
+  'silentSummary': false,
+  'verbose': false,
+  'inlineStream': false
 }
 ```
 The options object passed is extended with default values via lodash's `_.default()` utility, so passing all options are not required, and passing simply
@@ -41,7 +43,19 @@ or
 ```
 is as valid as passing all options.
 
+`paths` expects an array of paths which is will use as the source of your tests.
+
+`tags` expects an array of cucumber-js tags to run a subset of all features found.
+
+`requires` follows the `--requires` tag as defined by cucumber-js, and specifies external sources for step definitions, support files.
+
+`cucumberPath` is the path to your cucumber-js module, if you need to use a specific version, otherwise will default to what is included in multi-cuke.
+
+`workers` specifies the max number of parallel workers to be running at once. If no number passed, defaults to the number of cpu's available.
+
 `workerEnvVars` is an object that will be passed as environment variables to the cucumber-js worker process, and it's properties will be available to access in the forked process via process.env.
+
+`logDir` specifies the dir multi-cuke writes test log files to.
 
 The `silentSummary` option silences the default output of summary data when all tests cases resolve. This is an optional flag so that output summary can be handled or transformed at a later time via the returned object in the promise. An example:
 
@@ -67,6 +81,10 @@ Promise.all([
 
 ```
 
+`verbose` will log extra data around which workers are queued and still running.
+
+`inlineStream` will remove the silence on the worker process, so output occur in real-time in addition to the multi-cuke output. Generally, this makes output hard to decipher with workers running asynchronously, but the option is included for aid in debugging if deemed necessary or helpful.
+
 ### Using multi-cuke from command line
 multi-cuke comes ready to use from command line. It supports arguments of both feature paths and directory paths that contain features (including multiple paths), as well as the following tags:
 ```
@@ -77,6 +95,8 @@ multi-cuke comes ready to use from command line. It supports arguments of both f
   -w, --workers           Number of workers in parallel at a given time (defaults to the number of processors if none passed).
   -l, --logdir            Output dir for test logs
   -s, --silent-summary    Silences summary output so it can be handled via the returned promise
+  -v, --verbose          Adds verbose output to console
+  -i, --inlinestream     Inlines stream in real time in addition to multi-cuke output. *Note* This adds complexity to the logs that are hard to decipher, but included if needed for debugging
 
 ```
 All of the above options can also be found by using the `--help` flag on the command line.
@@ -102,6 +122,18 @@ It does not support the formatter flag currently available in cucumber-js' CLI, 
 
 It is important to note that multi-cuke defers to the installed version of cucumber-js unless otherwise passed a path to another cucumber install. To use a specific/pinned version of cucumber in your project, simply pass it on the command line or include it in the options object, and that will be used in place of the local dependency installed with multi-cuke.
 
+### Using console from within multi-cuke ###
+With the output channels of the child process specifically silenced in order to keep scenario logs in tact, console.log, error, etc. will not display during a test's run. To address this, there is an included utility `lib/utils/worker-log-handler.js`. The handler is provided so that you can declare it in your `world.js` file, and then be able to access it from your step definitions with a simple replace:
+```
+// world.js
+this.log = require('multi-cuke/lib/utils/worker-log-handler');
+
+
+// steps.js
+this.log('Log as usual, %s', 'nice');
+```
+
+This reason for this handler is to prevent having to rewrite logic in multiple projects. With this handler, if you are not within a child process (and therefore not parallelized), it will simply console.log as expected. If it is within a child process it will send a message to the test handler, which will push the message to the worker's defined log array, which will be batch output in order once the test finishes.
 
 ### Differences from standard Cucumber-js
 To best consolidate the data of all scenario runs into meaningful test results, multi-cuke runs Cucumber with the json formatter, and the results parsed back to pretty formatting for readability by `lib/parsers/pretty`. The standard cucumber-js formatters would have formatting and/or redundancy issues, so are not supported (at this time) and ignored here. Additional parsers can be added using the same API as defined in `lib/parsers/pretty`.

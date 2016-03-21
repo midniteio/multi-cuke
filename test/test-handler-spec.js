@@ -1,12 +1,12 @@
-import chai from 'chai'
-import chaiAsPromised from 'chai-as-promised'
-import fs from 'fs-extra'
+import chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
+import fs from 'fs-extra';
 
 chai.use(chaiAsPromised);
 chai.should();
 
-import TestHandler from '../src/lib/test-handler'
-import options from './fixtures/options'
+import TestHandler from '../src/lib/test-handler';
+import options from './fixtures/options';
 
 describe('Test Handler', function() {
   it('should wait for all children to exit before returning', function () {
@@ -17,7 +17,7 @@ describe('Test Handler', function() {
 
     return cukeRunner.run().then(() => {
       return cukeRunner.workers.should.be.empty;
-    })
+    });
   });
 
   it('should return the overall exit code when all tests finish', function () {
@@ -26,13 +26,13 @@ describe('Test Handler', function() {
 
     function nonInjectedExitCode() {
       let cukeRunner = new TestHandler(opts);
-      return cukeRunner.run()
+      return cukeRunner.run();
     }
 
     function injectedExitCode() {
       let injectedCukeRunner = new TestHandler(opts);
       injectedCukeRunner.overallExitCode = 10;
-      return injectedCukeRunner.run()
+      return injectedCukeRunner.run();
     }
 
     return Promise.all([

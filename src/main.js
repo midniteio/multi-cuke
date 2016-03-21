@@ -1,8 +1,8 @@
-import fs from 'fs-extra'
-import _ from 'lodash'
-import Promise from 'bluebird'
-import TestHandler from './lib/test-handler'
-import sigintHandler from './lib/sigint-handler'
+import fs from 'fs-extra';
+import _ from 'lodash';
+import Promise from 'bluebird';
+import TestHandler from './lib/test-handler';
+import sigintHandler from './lib/sigint-handler';
 
 // Run if invoked from command line with CLI args
 if (!module.parent) {
@@ -18,9 +18,10 @@ if (!module.parent) {
 }
 
 // Run if invoked from being required by another modules with passed args
-module.exports = function(options) {
+export default function(options) {
   return run(options || {});
 };
+
 
 function run(options) {
   _.defaults(options, {
