@@ -50,12 +50,16 @@ function run(options) {
     });
 
     return new Promise(function(resolve) {
-      cucumber(args).run(function (isSuccessful) {
-        let exitCode = (isSuccessful) ? 0 : 1;
-        resolve({exitCode: exitCode});
-      });
+      try {
+        cucumber(args).run(function (isSuccessful) {
+          let exitCode = (isSuccessful) ? 0 : 1;
+          resolve({exitCode: exitCode});
+        });
+      } catch (e) {
+        console.error(e.stack);
+        resolve({exitCode: 1});
+      }
     });
-
   } else {
     fs.ensureDir(options.logDir);
 
