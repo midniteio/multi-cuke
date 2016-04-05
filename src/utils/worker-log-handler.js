@@ -12,7 +12,7 @@ module.exports = function() {
     console.log(output);
   } else {
     process.send({
-      type: 'result',
+      type: 'log',
       message: output
     });
   }

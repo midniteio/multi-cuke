@@ -126,7 +126,7 @@ It is important to note that multi-cuke defers to the installed version of cucum
 With the output channels of the child process specifically silenced in order to keep scenario logs in tact, console.log, error, etc. will not display during a test's run. To address this, there is an included utility `lib/utils/worker-log-handler.js`. The handler is provided so that you can declare it in your `world.js` file, and then be able to access it from your step definitions with a simple replace:
 ```
 // world.js
-this.log = require('multi-cuke/lib/utils/worker-log-handler');
+this.log = require('multi-cuke/distribution/utils/worker-log-handler');
 
 
 // steps.js
