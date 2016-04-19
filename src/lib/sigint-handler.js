@@ -1,5 +1,3 @@
-import readline from 'readline';
-
 export default function(handler) {
   process.on('SIGINT', () => {
     process.exit();
