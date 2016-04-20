@@ -1,6 +1,6 @@
 {
   "name": "multi-cuke",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "description": "Forked Cucumber-js for parallel testing",
   "repository": {
     "type": "git",
