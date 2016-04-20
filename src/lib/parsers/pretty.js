@@ -100,7 +100,7 @@ export default class PrettyParser {
     let feature = gherkinParser.parse(file);
 
     let scenario = feature.scenarioDefinitions.filter((scenario) => {
-      return (scenario.location.line === scenarioLine);
+      return (scenario.location.line === parseInt(scenarioLine));
     }).pop();
 
     buffer.log('Feature: ' + feature.name);
