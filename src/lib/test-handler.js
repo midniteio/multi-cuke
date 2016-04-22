@@ -101,11 +101,11 @@ export default class TestHandler {
 
     worker.on('exit', () => {
       _.pull(this.workers, worker);
+      this.verboseLogger.log('Scenarios in progress:');
+      this.verboseLogger.logScenarios(_.map(this.workers, 'scenario'));
 
       if (!_.isEmpty(this.scenarios)) {
-        this.verboseLogger.log('Scenarios in progress:');
-        this.verboseLogger.logScenarios(_.map(this.workers, scenario));
-        this.workers.push(this.createWorker(this.scenarios.shift()));
+        this.createWorker(this.scenarios.shift());
       }
 
       if (_.isEmpty(this.scenarios) && _.isEmpty(this.workers)) {
