@@ -9,6 +9,8 @@ if (!module.parent) {
   let cliOptions = require('./lib/cli');
   cliOptions = _.omitBy(cliOptions.args, _.isUndefined);
 
+  console.log(cliOptions);
+  
   run(cliOptions).then((results) => {
     if (results.outputHandler) {
       console.log(results.outputHandler.getSummaryOutput());
@@ -29,7 +31,8 @@ function run(options) {
     'tags': [],
     'requires': [],
     'cucumberPath': require.resolve("cucumber"),
-    'workers': require('os').cpus().length,
+    'resources': require('os').cpus().length,
+    'testCost': 1,
     'logDir': ".tmp-logs",
     'workerEnvVars': {},
     'silentSummary': false,
