@@ -1,5 +1,4 @@
 import {cpus} from 'os';
-import {fork} from 'child_process';
 import path from 'path';
 import _ from 'lodash';
 import Promise from 'bluebird';

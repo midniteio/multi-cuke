@@ -1,6 +1,5 @@
 import path from 'path';
 import {spawn} from 'child_process';
-import fs from 'fs';
 
 export default class Worker {
   constructor(options) {
