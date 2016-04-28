@@ -63,7 +63,7 @@ export default class Worker {
   }
 
   kill() {
-    if (this.child && this.child.connected) {
+    if (this.child) {
       this.child.kill();
     }
   }
