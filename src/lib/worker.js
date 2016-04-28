@@ -47,19 +47,6 @@ export default class Worker {
       }
     });
 
-    this.child.on('close', function(code) {
-      if (running) {
-        running = false;
-        callback({
-          type: 'result',
-          exitCode: code,
-          featureFile: featureFile,
-          scenarioLine: scenarioLine,
-          duration: new Date() - startTime
-        });
-      }
-    });
-
     this.child.on('error', function(err) {
       if (running) {
         running = false;
