@@ -69,10 +69,7 @@ export default class TestHandler {
   createWorker(scenario) {
     this.verboseLogger.log('Initializing worker for: ' + scenario.featureFile + ':' + scenario.scenarioLine);
 
-    let cucumberPath = './node_modules/.bin/cucumber-js';
-    if (process.platform === 'win32') {
-      cucumberPath += '.cmd';
-    }
+    let cucumberPath = './node_modules/cucumber/bin/cucumber.js';
 
     let testOptions = {
       featureFile: scenario.featureFile,

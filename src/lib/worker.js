@@ -13,7 +13,7 @@ export default class Worker {
     this.logFile = path.join(options.logDir, this.logFileName);
     this.relativeLogFile = path.relative(process.cwd(), this.logFile);
     this.cucumberPath = options.cucumberPath;
-    this.args = [this.featureFile + ':' + this.scenarioLine, '-f', 'json:' + this.relativeLogFile];
+    this.args = [this.cucumberPath, this.featureFile + ':' + this.scenarioLine, '-f', 'json:' + this.relativeLogFile];
     options.requires.forEach(function(arg) {
       this.args.push('-r');
       this.args.push(arg);
@@ -27,7 +27,7 @@ export default class Worker {
 
       // TODO: allow inheriting stdio
       this.child = spawn(
-        this.cucumberPath,
+        process.execPath,
         this.args,
         {stdio: 'ignore'}
       );
