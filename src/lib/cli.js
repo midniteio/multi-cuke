@@ -25,6 +25,7 @@ program
     'Inlines stream in real time in addition to multi-cuke output. ' +
     '*Note* This adds complexity to the logs that are hard to decipher, but included if needed for debugging'
   )
+  .option('-d, --devMode', 'Shortcut for running cucumber-js directly')
   .parse(process.argv);
 
 export const args = {

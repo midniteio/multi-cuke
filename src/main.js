@@ -34,10 +34,11 @@ function run(options) {
     'workerEnvVars': {},
     'silentSummary': false,
     'verbose': false,
-    'inlineStream': false
+    'inlineStream': false,
+    'devMode': false
   });
 
-  if (options.workers === 1) {
+  if (options.devMode) {
     let cucumber = require(options.cucumberPath).Cli;
     let args = ['', '', options.paths.join(' ')];
     options.tags.forEach(function(arg) {
