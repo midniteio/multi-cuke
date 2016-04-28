@@ -27,7 +27,8 @@ multi-cuke takes an options object as a parameter, but when none is passed will 
   'logDir': '.tmp-logs',
   'silentSummary': false,
   'verbose': false,
-  'inlineStream': false
+  'inlineStream': false,
+  'devMode': false
 }
 ```
 The options object passed is extended with default values via lodash's `_.default()` utility, so passing all options are not required, and passing simply
@@ -85,6 +86,8 @@ Promise.all([
 
 `inlineStream` will remove the silence on the worker process, so output occur in real-time in addition to the multi-cuke output. Generally, this makes output hard to decipher with workers running asynchronously, but the option is included for aid in debugging if deemed necessary or helpful.
 
+`devMode` will run tests serially by calling the Cucumber-js cli directly. This option can be used during test development so that you can see the output update with each step run (avoiding the double printing that `inlineStream` shows).
+
 ### Using multi-cuke from command line
 multi-cuke comes ready to use from command line. It supports arguments of both feature paths and directory paths that contain features (including multiple paths), as well as the following tags:
 ```
@@ -97,6 +100,7 @@ multi-cuke comes ready to use from command line. It supports arguments of both f
   -s, --silent-summary    Silences summary output so it can be handled via the returned promise
   -v, --verbose          Adds verbose output to console
   -i, --inlinestream     Inlines stream in real time in addition to multi-cuke output. *Note* This adds complexity to the logs that are hard to decipher, but included if needed for debugging
+  -d, --devMode          Shortcut to running cucumber-js directly
 
 ```
 All of the above options can also be found by using the `--help` flag on the command line.
