@@ -4,20 +4,21 @@ import Promise from 'bluebird';
 
 export default class Worker {
   constructor(options) {
-    this.options = options;
-    this.featureFile = this.options.featureFile;
+    this.scenario = options.scenario;
+    this.featureFile = options.featureFile;
     this.featureFileData = path.parse(this.featureFile);
     this.featureName = this.featureFileData.name;
-    this.scenarioLine = this.options.scenarioLine;
+    this.scenarioLine = options.scenarioLine;
     this.logFileName = this.featureName + '-line-' + this.scenarioLine + '.json';
-    this.logFile = path.join(this.options.logDir, this.logFileName);
+    this.logFile = path.join(options.logDir, this.logFileName);
     this.relativeLogFile = path.relative(process.cwd(), this.logFile);
-    this.cucumberPath = this.options.cucumberPath;
+    this.cucumberPath = options.cucumberPath;
     this.args = [this.featureFile + ':' + this.scenarioLine, '-f', 'json:' + this.relativeLogFile];
-    this.options.requires.forEach(function(arg) {
+    options.requires.forEach(function(arg) {
       this.args.push('-r');
       this.args.push(arg);
     });
+    this.debugLogArray = [];
   }
 
   execute() {

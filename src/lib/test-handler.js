@@ -79,7 +79,8 @@ export default class TestHandler {
       scenarioLine: scenario.scenarioLine,
       logDir: this.options.logDir,
       cucumberPath: path.resolve(cucumberPath),
-      requires: this.options.requires
+      requires: this.options.requires,
+      scenario: scenario
     };
 
     let worker = new Worker(testOptions);
@@ -114,8 +115,6 @@ export default class TestHandler {
       }
     }.bind(this);
 
-    worker.debugLogArray = [];
-    worker.scenario = scenario;
     this.workers.push(worker);
 
     return worker.execute()
@@ -123,7 +122,14 @@ export default class TestHandler {
       return done(result);
     })
     .catch(function(err) {
-      console.error(err.stack);
+      return done({
+        type: 'result',
+        exitCode: 10,
+        exception: err,
+        featureFile: scenario.featureFile,
+        scenarioLine: scenario.scenarioLine,
+        duration: 0
+      });
     });
   }
 
