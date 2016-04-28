@@ -114,13 +114,17 @@ export default class TestHandler {
       }
     }.bind(this);
 
-    worker.execute(done);
-
     worker.debugLogArray = [];
     worker.scenario = scenario;
     this.workers.push(worker);
 
-    return worker;
+    return worker.execute()
+    .then(function(result) {
+      return done(result);
+    })
+    .catch(function(err) {
+      console.error(err.stack);
+    });
   }
 
   kill() {
