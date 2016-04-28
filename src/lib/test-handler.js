@@ -77,7 +77,8 @@ export default class TestHandler {
       logDir: this.options.logDir,
       cucumberPath: path.resolve(cucumberPath),
       requires: this.options.requires,
-      scenario: scenario
+      scenario: scenario,
+      inlineStream: this.options.inlineStream
     };
 
     let worker = new Worker(testOptions);
@@ -85,7 +86,6 @@ export default class TestHandler {
     let done = function(payload) {
       let output = this.outputHandler.handleResult(payload);
       console.log(output);
-      console.log(worker.debugLogArray.join('\n'));
 
       if (payload.exitCode !== 0) {
         this.overallExitCode = 1;

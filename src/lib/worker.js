@@ -18,18 +18,21 @@ export default class Worker {
       this.args.push('-r');
       this.args.push(arg);
     });
-    this.debugLogArray = [];
+    if (options.inlineStream) {
+      this.ioMode = 'inherit';
+    } else {
+      this.ioMode = 'ignore';
+    }
   }
 
   execute() {
     return new Promise(function(resolve) {
       let startTime = new Date();
 
-      // TODO: allow inheriting stdio
       this.child = spawn(
         process.execPath,
         this.args,
-        {stdio: 'ignore'}
+        {stdio: this.ioMode}
       );
 
       this.child.on('exit', function(code) {
