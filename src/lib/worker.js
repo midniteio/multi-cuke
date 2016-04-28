@@ -1,42 +1,84 @@
 import path from 'path';
+import {spawn} from 'child_process';
+import fs from 'fs';
 
-const testOptions = JSON.parse(process.env.testOptions);
-const cucumber = require(testOptions.cucumberPath).Cli;
+export default class Worker {
+  constructor(options) {
+    this.options = options;
+  }
 
-const featureFile = process.env.featureFile;
-const featureFileData = path.parse(process.env.featureFile);
-const featureName = featureFileData.name;
-const scenarioLine = process.env.scenarioLine;
-const logFileName = featureName + '-line-' + scenarioLine + '.json';
-const logFile = path.join(testOptions.logDir, logFileName);
-const relativeLogFile = path.relative(process.cwd(), logFile);
+  execute(callback) {
+    let featureFile = this.options.featureFile;
+    let featureFileData = path.parse(featureFile);
+    let featureName = featureFileData.name;
+    let scenarioLine = this.options.scenarioLine;
+    let logFileName = featureName + '-line-' + scenarioLine + '.json';
+    let logFile = path.join(this.options.logDir, logFileName);
+    let relativeLogFile = relativeLogFile = path.relative(process.cwd(), logFile);
+    let cucumberPath = this.options.cucumberPath;
+    let args = [featureFile + ':' + scenarioLine, '-f', 'json:' + relativeLogFile];
+    let running = false;
 
-let args = ['', '', featureFile + ':' + scenarioLine, '-f', 'json:' + relativeLogFile];
-
-testOptions.requires.forEach(function(arg) {
-  args.push('-r');
-  args.push(arg);
-});
-
-let startTime = new Date();
-
-try {
-  cucumber(args).run(function(isSuccessful) {
-    let exitCode = (isSuccessful) ? 0 : 1;
-    process.send({
-      type: 'result',
-      exitCode: exitCode,
-      resultFile: logFile,
-      duration: new Date() - startTime
+    this.options.requires.forEach(function(arg) {
+      args.push('-r');
+      args.push(arg);
     });
-  });
-} catch (e) {
-  process.send({
-    type: 'result',
-    exitCode: 10,
-    exception: e.stack,
-    featureFile: featureFile,
-    scenarioLine: scenarioLine,
-    duration: new Date() - startTime
-  });
+
+    // TODO: allow inheriting stdio
+    this.child = spawn(
+      cucumberPath,
+      args,
+      {stdio: 'ignore'}
+    );
+    running = true;
+
+    let startTime = new Date();
+
+    this.child.on('exit', function(code) {
+      if (running) {
+        running = false;
+        callback({
+          type: 'result',
+          exitCode: code,
+          featureFile: featureFile,
+          scenarioLine: scenarioLine,
+          resultFile: logFile,
+          duration: new Date() - startTime
+        });
+      }
+    });
+
+    this.child.on('close', function(code) {
+      if (running) {
+        running = false;
+        callback({
+          type: 'result',
+          exitCode: code,
+          featureFile: featureFile,
+          scenarioLine: scenarioLine,
+          duration: new Date() - startTime
+        });
+      }
+    });
+
+    this.child.on('error', function(err) {
+      if (running) {
+        running = false;
+        callback({
+          type: 'result',
+          exitCode: 10,
+          exception: err,
+          featureFile: featureFile,
+          scenarioLine: scenarioLine,
+          duration: new Date() - startTime
+        });
+      }
+    });
+  }
+
+  kill() {
+    if (this.child && this.child.connected) {
+      this.child.kill();
+    }
+  }
 }
