@@ -113,10 +113,10 @@ export default class TestHandler {
     this.workers.push(worker);
 
     return worker.execute()
-      .then(function(result) {
+      .then((result) => {
         return done(result);
       })
-      .catch(function(err) {
+      .catch((err) => {
         console.log(err.stack);
       });
   }
