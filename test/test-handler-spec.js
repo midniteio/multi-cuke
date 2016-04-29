@@ -11,6 +11,7 @@ import options from './fixtures/options';
 describe('Test Handler', function() {
   it('should wait for all children to exit before returning', function () {
     var opts = options.default;
+    this.timeout(5000);
     fs.ensureDir(opts.logDir);
 
     let cukeRunner = new TestHandler(opts);
@@ -22,6 +23,7 @@ describe('Test Handler', function() {
 
   it('should return the overall exit code when all tests finish', function () {
     var opts = options.default;
+    this.timeout(5000);
     fs.ensureDir(opts.logDir);
 
     function nonInjectedExitCode() {
@@ -43,6 +45,7 @@ describe('Test Handler', function() {
 
   it('should return the output handler', function () {
     var opts = options.default;
+    this.timeout(5000);
     fs.ensureDir(opts.logDir);
 
     let cukeRunner = new TestHandler(opts);
@@ -53,6 +56,7 @@ describe('Test Handler', function() {
 
   it('should have the summary available from the ouput handler ', function () {
     var opts = options.default;
+    this.timeout(5000);
     fs.ensureDir(opts.logDir);
 
     let cukeRunner = new TestHandler(opts);

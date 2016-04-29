@@ -1,11 +1,11 @@
 import {cpus} from 'os';
-import {fork} from 'child_process';
 import path from 'path';
 import _ from 'lodash';
 import Promise from 'bluebird';
 import OutputHandler from './parsers/pretty';
 import featureFinder from './feature-finder';
 import VerboseLogger from '../utils/verbose-logger';
+import Worker from './worker';
 
 let maxWorkers = cpus().length;
 
@@ -68,38 +68,26 @@ export default class TestHandler {
 
   createWorker(scenario) {
     this.verboseLogger.log('Initializing worker for: ' + scenario.featureFile + ':' + scenario.scenarioLine);
+    let testOptions = {
+      featureFile: scenario.featureFile,
+      scenarioLine: scenario.scenarioLine,
+      logDir: this.options.logDir,
+      cucumberPath: path.resolve(require.resolve("cucumber").replace('lib', 'bin')),
+      requires: this.options.requires,
+      scenario: scenario,
+      inlineStream: this.options.inlineStream
+    };
 
-    let workerModulePath = path.join(__dirname, 'worker');
-    let workerEnv = _.merge(
-      process.env,
-      this.options.workerEnvVars,
-      scenario,
-      {testOptions: JSON.stringify(this.options)}
-    );
-    let worker = fork(workerModulePath, [], {
-      env: workerEnv,
-      silent: !this.options.inlineStream
-    });
+    let worker = new Worker(testOptions);
 
-    worker.debugLogArray = [];
-    worker.scenario = scenario;
-    this.workers.push(worker);
+    let done = (payload) => {
+      let output = this.outputHandler.handleResult(payload);
+      console.log(output);
 
-    worker.on('message', (payload) => {
-      if (payload.type === 'log') {
-        worker.debugLogArray.push(payload.message);
-      } else if (payload.type === 'result'){
-        let output = this.outputHandler.handleResult(payload);
-        console.log(output);
-        console.log(worker.debugLogArray.join('\n'));
-
-        if (payload.exitCode !== 0) {
-          this.overallExitCode = 1;
-        }
+      if (payload.exitCode !== 0) {
+        this.overallExitCode = 1;
       }
-    });
 
-    worker.on('exit', () => {
       _.pull(this.workers, worker);
       this.verboseLogger.log('Scenarios in progress:');
       this.verboseLogger.logScenarios(_.map(this.workers, 'scenario'));
@@ -115,13 +103,22 @@ export default class TestHandler {
           console.log(this.outputHandler.getSummaryOutput());
         }
       }
-    });
 
-    worker.on('error', (worker, error) => {
-      console.log('Error caught: ', error);
-    });
+      if (payload.exception) {
+        console.log('Error caught: ', payload.exception);
+        console.log(payload.exception.stack);
+      }
+    };
 
-    return worker;
+    this.workers.push(worker);
+
+    return worker.execute()
+      .then((result) => {
+        return done(result);
+      })
+      .catch((err) => {
+        console.log(err.stack);
+      });
   }
 
   kill() {
