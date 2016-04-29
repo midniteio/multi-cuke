@@ -43,7 +43,7 @@ export default class Worker {
     try {
       results = fs.readJsonSync(this.logFile).pop();
     } catch (e) {
-      // Return null if results file is not parseable
+      err = err || e;
     }
 
     return {
