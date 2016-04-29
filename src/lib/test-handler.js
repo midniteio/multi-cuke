@@ -68,14 +68,11 @@ export default class TestHandler {
 
   createWorker(scenario) {
     this.verboseLogger.log('Initializing worker for: ' + scenario.featureFile + ':' + scenario.scenarioLine);
-
-    let cucumberPath = './node_modules/cucumber/bin/cucumber.js';
-
     let testOptions = {
       featureFile: scenario.featureFile,
       scenarioLine: scenario.scenarioLine,
       logDir: this.options.logDir,
-      cucumberPath: path.resolve(cucumberPath),
+      cucumberPath: path.resolve(require.resolve("cucumber").replace('lib', 'bin')),
       requires: this.options.requires,
       scenario: scenario,
       inlineStream: this.options.inlineStream
@@ -83,7 +80,7 @@ export default class TestHandler {
 
     let worker = new Worker(testOptions);
 
-    let done = function(payload) {
+    let done = (payload) => {
       let output = this.outputHandler.handleResult(payload);
       console.log(output);
 
@@ -109,25 +106,19 @@ export default class TestHandler {
 
       if (payload.exception) {
         console.log('Error caught: ', payload.exception);
+        console.log(payload.exception.stack);
       }
-    }.bind(this);
+    };
 
     this.workers.push(worker);
 
     return worker.execute()
-    .then(function(result) {
-      return done(result);
-    })
-    .catch(function(err) {
-      return done({
-        type: 'result',
-        exitCode: 10,
-        exception: err,
-        featureFile: scenario.featureFile,
-        scenarioLine: scenario.scenarioLine,
-        duration: 0
+      .then(function(result) {
+        return done(result);
+      })
+      .catch(function(err) {
+        console.log(err.stack);
       });
-    });
   }
 
   kill() {

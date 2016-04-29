@@ -17,7 +17,7 @@ export default class Worker {
     options.requires.forEach(function(arg) {
       this.args.push('-r');
       this.args.push(arg);
-    });
+    }.bind(this));
     if (options.inlineStream) {
       this.ioMode = 'inherit';
     } else {
