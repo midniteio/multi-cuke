@@ -43,6 +43,7 @@ export default class Worker {
     try {
       results = fs.readJsonSync(this.logFile).pop();
     } catch (e) {
+      e.msg = 'Cucumber has failed to produce parseable results.' + e.msg;
       err = err || e;
     }
 
