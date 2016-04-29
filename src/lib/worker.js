@@ -14,10 +14,10 @@ export default class Worker {
     this.relativeLogFile = path.relative(process.cwd(), this.logFile);
     this.cucumberPath = options.cucumberPath;
     this.args = [this.cucumberPath, this.featureFile + ':' + this.scenarioLine, '-f', 'json:' + this.relativeLogFile];
-    options.requires.forEach(function(arg) {
+    options.requires.forEach((arg) => {
       this.args.push('-r');
       this.args.push(arg);
-    }.bind(this));
+    });
     if (options.inlineStream) {
       this.ioMode = 'inherit';
     } else {
@@ -26,7 +26,7 @@ export default class Worker {
   }
 
   execute() {
-    return new Promise(function(resolve) {
+    return new Promise((resolve) => {
       let startTime = new Date();
 
       this.child = spawn(
@@ -35,7 +35,7 @@ export default class Worker {
         {stdio: this.ioMode}
       );
 
-      this.child.on('exit', function(code) {
+      this.child.on('exit', (code) => {
         resolve({
           type: 'result',
           exitCode: code,
@@ -44,9 +44,9 @@ export default class Worker {
           resultFile: this.logFile,
           duration: new Date() - startTime
         });
-      }.bind(this));
+      });
 
-      this.child.on('error', function(err) {
+      this.child.on('error', (err) => {
         resolve({
           type: 'result',
           exitCode: 10,
@@ -55,8 +55,8 @@ export default class Worker {
           scenarioLine: this.scenarioLine,
           duration: new Date() - startTime
         });
-      }.bind(this));
-    }.bind(this));
+      });
+    });
   }
 
   kill() {
