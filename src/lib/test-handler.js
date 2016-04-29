@@ -1,5 +1,4 @@
 import {cpus} from 'os';
-import path from 'path';
 import _ from 'lodash';
 import Promise from 'bluebird';
 import OutputHandler from './parsers/pretty';
@@ -72,7 +71,7 @@ export default class TestHandler {
       featureFile: scenario.featureFile,
       scenarioLine: scenario.scenarioLine,
       logDir: this.options.logDir,
-      cucumberPath: path.resolve(require.resolve("cucumber").replace('lib', 'bin')),
+      cucumberPath: this.options.cucumberPath.replace('lib', 'bin'),
       requires: this.options.requires,
       scenario: scenario,
       inlineStream: this.options.inlineStream

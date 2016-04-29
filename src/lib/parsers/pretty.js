@@ -1,13 +1,9 @@
 import path from 'path';
 import util from 'util';
-import fs from 'fs-extra';
 import prettyMs from 'pretty-ms';
 import _ from 'lodash';
-import Gherkin from 'gherkin';
 import colorMap from '../../../data/cucumber-color-map';
 import {colorize, indent, buffer} from '../../utils/unix';
-
-const gherkinParser = new Gherkin.Parser();
 
 export default class PrettyParser {
   constructor() {
@@ -27,16 +23,14 @@ export default class PrettyParser {
 
   handleResult(payload) {
     this.totalDuration += payload.duration;
-    if (payload.exitCode !== 10) {
-      return this.parseResult(payload.resultFile);
+    if (payload.results) {
+      return this.parseResult(payload.results);
     } else {
-      return this.parseException(payload.featureFile, payload.scenarioLine, payload.exception);
+      return this.parseException(payload.feature, payload.scenario, payload.exception);
     }
   }
 
-  parseResult(resultsFile) {
-    let logFileJSON = fs.readJsonSync(resultsFile);
-    let feature = logFileJSON.pop();
+  parseResult(feature) {
     let featureFile = path.basename(feature.uri);
     let scenario = _.filter(feature.elements, ['type', 'scenario']).pop();
     let tagsArray = _.map(scenario.tags, 'name');
@@ -95,14 +89,7 @@ export default class PrettyParser {
     return buffer.dump();
   }
 
-  parseException(featureFile, scenarioLine, exception) {
-    let file = fs.readFileSync(featureFile, { encoding: 'utf8' });
-    let feature = gherkinParser.parse(file);
-
-    let scenario = feature.scenarioDefinitions.filter((scenario) => {
-      return (scenario.location.line === parseInt(scenarioLine));
-    }).pop();
-
+  parseException(feature, scenario, exception) {
     buffer.log('Feature: ' + feature.name);
 
     if (scenario.tags) {
@@ -113,7 +100,7 @@ export default class PrettyParser {
     buffer.log(indent(1) + 'Scenario: ' + scenario.name);
     buffer.log(colorize(indent(1) + exception, 'red'));
 
-    this.failedScenarios.push(path.basename(featureFile) + ':' + scenario.location.line + ' # ' + scenario.name);
+    this.failedScenarios.push(path.basename(feature.uri) + ':' + scenario.location.line + ' # ' + scenario.name);
     this.scenarioStatuses.failed++;
     this.totalScenarios++;
 
