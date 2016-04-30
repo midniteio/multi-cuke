@@ -1,12 +1,19 @@
 import path from 'path';
 import chai from 'chai';
+import fs from 'fs-extra';
+import Gherkin from 'gherkin';
+import PrettyParser from '../src/lib/parsers/pretty';
 
 chai.should();
 
-import PrettyParser from '../src/lib/parsers/pretty';
-
 const featureFile = path.join(__dirname, 'features', 'sample.feature');
-const featureOutput = path.join(__dirname, 'fixtures', 'sample-feature-output.json');
+const featureFileData = fs.readFileSync(featureFile, { encoding: 'utf8' });
+const featureOutput = require('./fixtures/sample-feature-output.json').pop();
+const gherkinParser = new Gherkin.Parser();
+const feature = gherkinParser.parse(featureFileData);
+const scenario = feature.scenarioDefinitions.filter((scenario) => {
+  return (scenario.location.line === 7);
+}).pop();
 
 describe('Pretty parser', function() {
   it('parser should handle a valid test run and update the tracked properties', function() {
@@ -14,7 +21,9 @@ describe('Pretty parser', function() {
     let output = parser.handleResult({
       exitCode: 0,
       duration: 100,
-      resultFile: featureOutput
+      results: featureOutput,
+      scenario: scenario,
+      feature: feature
     });
 
     return Promise.all([
@@ -35,7 +44,8 @@ describe('Pretty parser', function() {
     let output = parser.handleResult({
       exitCode: 10,
       duration: 100,
-      featureFile: featureFile,
+      feature: feature,
+      scenario: scenario,
       scenarioLine: 7,
       exception: err
     });
@@ -55,12 +65,16 @@ describe('Pretty parser', function() {
     parser.handleResult({
       exitCode: 0,
       duration: 100,
-      resultFile: featureOutput
+      results: featureOutput,
+      scenario: scenario,
+      feature: feature
     });
     parser.handleResult({
       exitCode: 0,
       duration: 200,
-      resultFile: featureOutput
+      results: featureOutput,
+      scenario: scenario,
+      feature: feature
     });
 
     return Promise.all([
@@ -78,7 +92,9 @@ describe('Pretty parser', function() {
     parser.handleResult({
       exitCode: 0,
       duration: 100,
-      resultFile: featureOutput
+      results: featureOutput,
+      scenario: scenario,
+      feature: feature
     });
     parser.setEndTime();
 
