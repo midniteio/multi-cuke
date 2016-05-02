@@ -19,7 +19,7 @@ export default class Worker {
       return (scenario.location.line === parseInt(this.scenarioLine));
     }).pop();
 
-    this.logFileName = path.basename(this.featureData.uri) + '-line-' + this.scenarioLine + '.json';
+    this.logFileName = path.basename(this.featureFile) + '-line-' + this.scenarioLine + '.json';
     this.logFile = path.join(options.logDir, this.logFileName);
     this.relativeLogFile = path.relative(process.cwd(), this.logFile);
 
