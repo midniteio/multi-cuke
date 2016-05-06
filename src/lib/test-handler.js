@@ -73,11 +73,15 @@ export default class TestHandler {
     let mergedFileName = path.join(this.options.logDir, 'merged', 'results.json');
     let logFilePaths = fs.readdirSync(this.options.logDir);
     logFilePaths.forEach((logFilePath) => {
-      if (_.endsWith(logFilePath, '.json')) {
-        testResults = _.concat(
-          testResults,
-          fs.readJsonSync(path.join(this.options.logDir, logFilePath), 'utf8')
-        );
+      try {
+        if (_.endsWith(logFilePath, '.json')) {
+          testResults = _.concat(
+            testResults,
+            fs.readJsonSync(path.join(this.options.logDir, logFilePath), 'utf8')
+          );
+        }
+      } catch (e) {
+        // ignore errors from invalid/empty files
       }
     });
     fs.ensureDirSync(path.join(this.options.logDir, 'merged'));
