@@ -1,6 +1,7 @@
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import fs from 'fs-extra';
+import path from 'path';
 
 chai.use(chaiAsPromised);
 chai.should();
@@ -62,6 +63,18 @@ describe('Test Handler', function() {
     let cukeRunner = new TestHandler(opts);
     return cukeRunner.run().then((results) => {
       return results.outputHandler.getSummaryOutput().should.not.be.empty;
+    });
+  });
+
+  it('should generate a merged json log', function () {
+    var opts = options.default;
+    this.timeout(5000);
+    fs.ensureDir(opts.logDir);
+    let mergedFilePath = path.join(opts.logDir, 'merged', 'results.json');
+
+    let cukeRunner = new TestHandler(opts);
+    return cukeRunner.run().then(() => {
+      chai.expect(fs.existsSync(mergedFilePath)).to.be.true;
     });
   });
 

@@ -1,6 +1,8 @@
 import {cpus} from 'os';
 import _ from 'lodash';
 import Promise from 'bluebird';
+import fs from 'fs-extra';
+import path from 'path';
 import OutputHandler from './parsers/pretty';
 import featureFinder from './feature-finder';
 import VerboseLogger from '../utils/verbose-logger';
@@ -29,6 +31,7 @@ export default class TestHandler {
         return this.waitForChildren();
       })
       .then(() => {
+        this.mergeLogs();
         return {
           exitCode: this.overallExitCode,
           outputHandler: this.outputHandler
@@ -63,6 +66,22 @@ export default class TestHandler {
           return this.waitForChildren();
         }
       });
+  }
+
+  mergeLogs() {
+    let testResults = [];
+    let mergedFileName = path.join(this.options.logDir, 'merged', 'results.json');
+    let logFilePaths = fs.readdirSync(this.options.logDir);
+    logFilePaths.forEach((logFilePath) => {
+      if (_.endsWith(logFilePath, '.json')) {
+        testResults = _.concat(
+          testResults,
+          JSON.parse(fs.readFileSync(path.join(this.options.logDir, logFilePath), 'utf8'))
+        );
+      }
+    });
+    fs.ensureDirSync(path.join(this.options.logDir, 'merged'));
+    fs.writeFileSync(mergedFileName, JSON.stringify(testResults, null, 4));
   }
 
   createWorker(scenario) {
