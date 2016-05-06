@@ -76,7 +76,7 @@ export default class TestHandler {
       if (_.endsWith(logFilePath, '.json')) {
         testResults = _.concat(
           testResults,
-          JSON.parse(fs.readFileSync(path.join(this.options.logDir, logFilePath), 'utf8'))
+          fs.readJsonSync(path.join(this.options.logDir, logFilePath), 'utf8')
         );
       }
     });
