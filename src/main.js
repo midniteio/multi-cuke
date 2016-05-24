@@ -40,7 +40,7 @@ function run(options) {
 
   if (options.devMode) {
     let cucumber = require(options.cucumberPath).Cli;
-    let args = ['', '', options.paths.join(' ')];
+    let args = _.concat(['', ''], options.paths);
     options.tags.forEach(function(arg) {
       args.push('-t');
       args.push(arg);
