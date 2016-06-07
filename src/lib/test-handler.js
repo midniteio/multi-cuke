@@ -1,4 +1,3 @@
-import {cpus} from 'os';
 import _ from 'lodash';
 import Promise from 'bluebird';
 import fs from 'fs-extra';
@@ -7,8 +6,6 @@ import OutputHandler from './parsers/pretty';
 import featureFinder from './feature-finder';
 import VerboseLogger from '../utils/verbose-logger';
 import Worker from './worker';
-
-let maxWorkers = cpus().length;
 
 export default class TestHandler {
   constructor(options) {
@@ -49,7 +46,7 @@ export default class TestHandler {
       }
 
       this.scenarios = scenarios;
-      for (var i = 0; i < Math.min(this.options.workers, maxWorkers); i++) {
+      for (var i = 0; i < this.options.workers; i++) {
         if (!_.isEmpty(scenarios)) {
           this.createWorker(scenarios.shift());
         }
