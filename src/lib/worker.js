@@ -34,17 +34,19 @@ export default class Worker {
     if (options.inlineStream) {
       this.ioMode = 'inherit';
     } else {
-      this.ioMode = 'ignore';
+      this.ioMode = ['ignore', 'ignore', 'pipe'];
     }
   }
 
   formatResults(exitCode, startTime, err) {
     let results = null;
-    try {
-      results = fs.readJsonSync(this.logFile).pop();
-    } catch (e) {
-      e.msg = 'Cucumber has failed to produce parseable results.' + e.msg;
-      err = err || e;
+    if (!err) {
+      try {
+        results = fs.readJsonSync(this.logFile).pop();
+      } catch (e) {
+        e.msg = 'Cucumber has failed to produce parseable results.' + e.msg;
+        err = err || e;
+      }
     }
 
     return {
@@ -61,6 +63,7 @@ export default class Worker {
   execute() {
     return new Promise((resolve) => {
       let startTime = new Date();
+      let cucumberError;
 
       this.child = spawn(
         process.execPath,
@@ -69,11 +72,15 @@ export default class Worker {
       );
 
       this.child.on('exit', (code) => {
-        resolve(this.formatResults(code, startTime));
+        resolve(this.formatResults(code, startTime, cucumberError));
       });
 
       this.child.on('error', (err) => {
         resolve(this.formatResults(1, startTime, err));
+      });
+
+      this.child.stderr.on('data', (data) => {
+        cucumberError = data;
       });
     });
   }
