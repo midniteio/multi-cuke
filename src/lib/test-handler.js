@@ -125,11 +125,6 @@ export default class TestHandler {
           console.log(this.outputHandler.getSummaryOutput());
         }
       }
-
-      if (payload.exception) {
-        console.log('Error caught: ', payload.exception);
-        console.log(payload.exception.stack);
-      }
     };
 
     this.workers.push(worker);
