@@ -34,7 +34,7 @@ export default class Worker {
     if (options.inlineStream) {
       this.ioMode = 'inherit';
     } else {
-      this.ioMode = ['ignore', 'ignore', 'pipe'];
+      this.ioMode = ['ignore', 'pipe', 'pipe'];
     }
   }
 
@@ -63,6 +63,7 @@ export default class Worker {
   execute() {
     return new Promise((resolve) => {
       let startTime = new Date();
+      let cucumberOut = '';
       let cucumberError;
 
       this.child = spawn(
@@ -76,11 +77,15 @@ export default class Worker {
       });
 
       this.child.on('error', (err) => {
-        resolve(this.formatResults(1, startTime, err));
+        resolve(this.formatResults(1, startTime, cucumberOut + '\n' + err));
+      });
+
+      this.child.stdout.on('data', (data) => {
+        cucumberOut = cucumberOut + data;
       });
 
       this.child.stderr.on('data', (data) => {
-        cucumberError = data;
+        cucumberError = cucumberOut + data;
       });
     });
   }
