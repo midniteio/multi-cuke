@@ -91,6 +91,7 @@ export default class PrettyParser {
 
   parseException(feature, scenario, exception) {
     let errorMessage = exception.stack || exception;
+    let featureUri = feature.uri || '';
     buffer.log('Feature: ' + feature.name);
 
     if (scenario.tags) {
@@ -101,7 +102,7 @@ export default class PrettyParser {
     buffer.log(indent(1) + 'Scenario: ' + scenario.name);
     buffer.log(colorize(indent(1) + errorMessage, 'red'));
 
-    this.failedScenarios.push(path.basename(feature.uri) + ':' + scenario.location.line + ' # ' + scenario.name);
+    this.failedScenarios.push(path.basename(featureUri) + ':' + scenario.location.line + ' # ' + scenario.name);
     this.scenarioStatuses.failed++;
     this.totalScenarios++;
 
