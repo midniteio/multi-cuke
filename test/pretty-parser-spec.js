@@ -10,9 +10,9 @@ const featureFile = path.join(__dirname, 'features', 'sample.feature');
 const featureFileData = fs.readFileSync(featureFile, { encoding: 'utf8' });
 const featureOutput = require('./fixtures/sample-feature-output.json').pop();
 const gherkinParser = new Gherkin.Parser();
-const feature = gherkinParser.parse(featureFileData);
-const scenario = feature.scenarioDefinitions.filter((scenario) => {
-  return (scenario.location.line === 7);
+const feature = gherkinParser.parse(featureFileData).feature;
+const scenario = feature.children.filter((child) => {
+  return (child.location.line === 7);
 }).pop();
 
 describe('Pretty parser', function() {
@@ -25,7 +25,6 @@ describe('Pretty parser', function() {
       scenario: scenario,
       feature: feature
     });
-
     return Promise.all([
       parser.should.have.deep.property('totalSteps').and.to.be.equal(2),
       parser.should.have.deep.property('totalScenarios').and.to.be.equal(1),

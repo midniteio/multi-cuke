@@ -14,8 +14,8 @@ export default class Worker {
 
     let file = fs.readFileSync(this.featureFile, { encoding: 'utf8' });
 
-    this.featureData = gherkinParser.parse(file);
-    this.scenarioData = this.featureData.scenarioDefinitions.filter((scenario) => {
+    this.featureData = gherkinParser.parse(file).feature;
+    this.scenarioData = this.featureData.children.filter((scenario) => {
       return (scenario.location.line === parseInt(this.scenarioLine));
     }).pop();
 
