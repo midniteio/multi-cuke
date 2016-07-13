@@ -58,10 +58,6 @@ export default class TestHandler {
   waitForChildren() {
     return Promise.delay(500)
       .then(() => {
-        if (this.failFast && !_.isEmpty(this.outputHandler.scenarioStatuses.failed)) {
-          this.verboseLogger.log('Fail fast: A scenario failed, clearing remaining scenarios.');
-          this.scenarios = [];
-        }
         if (_.isEmpty(this.scenarios) && _.isEmpty(this.workers)) {
           return this.outputHandler.scenarioStatuses.failed.length;
         } else {
@@ -110,6 +106,10 @@ export default class TestHandler {
 
       if (payload.exitCode !== 0) {
         this.overallExitCode = 1;
+        if (this.failFast) {
+          this.verboseLogger.log('Fail fast: A scenario failed, clearing remaining scenarios.');
+          this.scenarios = [];
+        }
       }
 
       _.pull(this.workers, worker);
