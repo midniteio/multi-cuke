@@ -11,6 +11,7 @@ export default class TestHandler {
   constructor(options) {
     this.outputHandler = new OutputHandler();
     this.silentSummary = options.silentSummary;
+    this.failFast = options.failFast;
     this.verboseLogger = new VerboseLogger(options.verbose);
     this.workers = [];
     this.scenarios = [];
@@ -105,6 +106,10 @@ export default class TestHandler {
 
       if (payload.exitCode !== 0) {
         this.overallExitCode = 1;
+        if (this.failFast) {
+          this.verboseLogger.log('Fail fast: A scenario failed, clearing remaining scenarios.');
+          this.scenarios = [];
+        }
       }
 
       _.pull(this.workers, worker);
