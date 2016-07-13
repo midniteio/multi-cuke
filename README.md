@@ -28,6 +28,7 @@ multi-cuke takes an options object as a parameter, but when none is passed will 
   'silentSummary': false,
   'verbose': false,
   'inlineStream': false,
+  'failFast': false,
   'devMode': false
 }
 ```
@@ -98,9 +99,10 @@ multi-cuke comes ready to use from command line. It supports arguments of both f
   -w, --workers           Number of workers in parallel at a given time (defaults to the number of processors if none passed).
   -l, --logdir            Output dir for test logs
   -s, --silent-summary    Silences summary output so it can be handled via the returned promise
-  -v, --verbose          Adds verbose output to console
-  -i, --inlinestream     Inlines stream in real time in addition to multi-cuke output. *Note* This adds complexity to the logs that are hard to decipher, but included if needed for debugging
-  -d, --devMode          Shortcut to running cucumber-js directly
+  -v, --verbose           Adds verbose output to console
+  --fail-fast             Abort the run on first failure
+  -i, --inlinestream      Inlines stream in real time in addition to multi-cuke output. *Note* This adds complexity to the logs that are hard to decipher, but included if needed for debugging
+  -d, --devMode           Shortcut to running cucumber-js directly
 
 ```
 All of the above options can also be found by using the `--help` flag on the command line.
