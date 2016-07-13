@@ -11,6 +11,7 @@ export default class TestHandler {
   constructor(options) {
     this.outputHandler = new OutputHandler();
     this.silentSummary = options.silentSummary;
+    this.failFast = options.failFast;
     this.verboseLogger = new VerboseLogger(options.verbose);
     this.workers = [];
     this.scenarios = [];
@@ -57,6 +58,10 @@ export default class TestHandler {
   waitForChildren() {
     return Promise.delay(500)
       .then(() => {
+        if (this.failFast && !_.isEmpty(this.outputHandler.scenarioStatuses.failed)) {
+          this.verboseLogger.log('Fail fast: A scenario failed, clearing remaining scenarios.');
+          this.scenarios = [];
+        }
         if (_.isEmpty(this.scenarios) && _.isEmpty(this.workers)) {
           return this.outputHandler.scenarioStatuses.failed.length;
         } else {
