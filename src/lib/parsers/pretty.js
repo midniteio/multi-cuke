@@ -92,7 +92,7 @@ export default class PrettyParser {
   parseException(feature, scenario, exception) {
     let errorMessage = 'Unknown error';
     if (exception) {
-      exception.stack || exception;
+      errorMessage = exception.stack || exception;
     }
     let featureUri = feature.uri || '';
     buffer.log('Feature: ' + feature.name);
