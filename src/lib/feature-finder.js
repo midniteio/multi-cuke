@@ -20,9 +20,9 @@ export default function(cucumberOptions) {
     files = _.flattenDeep(files);
     return files.map((file) => {
       let featureData = parseFeature(file);
-      return featureData.scenarioDefinitions
-        .filter((scenario) => {
-          return verifyTags(scenario, cucumberOptions.tags);
+      return featureData.children
+        .filter((child) => {
+          return child.type === "Scenario" && verifyTags(child, cucumberOptions.tags);
         })
         .map((scenario) => {
           return {
@@ -40,10 +40,10 @@ export default function(cucumberOptions) {
 function parseFeature(featurePath) {
   try {
     let file = fs.readFileSync(featurePath, {encoding: 'utf8'});
-    return gherkinParser.parse(file);
+    return gherkinParser.parse(file).feature;
   } catch (e) {
     console.log(featurePath + ' could not be parsed from Gherkin, ignoring as a feature file.', e);
-    return {scenarioDefinitions: []};
+    return {children: []};
   }
 }
 
