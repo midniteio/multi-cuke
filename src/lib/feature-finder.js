@@ -22,7 +22,7 @@ export default function(cucumberOptions) {
       let featureData = parseFeature(file);
       return featureData.children
         .filter((child) => {
-          return child.type === "Scenario" && verifyTags(child, cucumberOptions.tags);
+          return (child.type === "Scenario" || child.type === "ScenarioOutline") && verifyTags(child, cucumberOptions.tags);
         })
         .map((scenario) => {
           return {
