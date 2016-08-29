@@ -32,59 +32,61 @@ export default class PrettyParser {
 
   parseResult(feature) {
     let featureFile = path.basename(feature.uri);
-    let scenario = _.filter(feature.elements, ['type', 'scenario']).pop();
-    let tagsArray = _.map(scenario.tags, 'name');
 
-    let maxStepLength = findMaxStepTitleLength(scenario.steps);
-    let passed = true;
+    _.filter(feature.elements, ['type', 'scenario']).forEach((scenario) => {
+      let tagsArray = _.map(scenario.tags, 'name');
 
-    buffer.log('Feature: ' + feature.name);
-    if (!_.isEmpty(tagsArray)) {
-      buffer.log(colorize(indent(1) + tagsArray.join(' '), colorMap.tag));
-    }
-    buffer.log(indent(1) + 'Scenario: ' + scenario.name);
+      let maxStepLength = findMaxStepTitleLength(scenario.steps);
+      let passed = true;
 
-    scenario.steps.forEach((step) => {
-      if (!step.hidden) {
-        let stepDesc = colorize(
-          indent(2) + _.padEnd(step.keyword + step.name, maxStepLength) + indent(1),
-          colorMap[step.result.status]
-          );
-        let lineStr = colorize('# ' + featureFile + ':' + step.line, colorMap.comment);
-        buffer.log(stepDesc + lineStr);
+      buffer.log('Feature: ' + feature.name);
+      if (!_.isEmpty(tagsArray)) {
+        buffer.log(colorize(indent(1) + tagsArray.join(' '), colorMap.tag));
+      }
+      buffer.log(indent(1) + 'Scenario: ' + scenario.name);
 
-        if (step.result.status === 'failed') {
-          buffer.log(colorize(indent(2) + step.result.error_message + '\n', 'red'));
-          passed = false;
+      scenario.steps.forEach((step) => {
+        if (!step.hidden) {
+          let stepDesc = colorize(
+            indent(2) + _.padEnd(step.keyword + step.name, maxStepLength) + indent(1),
+            colorMap[step.result.status]
+            );
+          let lineStr = colorize('# ' + featureFile + ':' + step.line, colorMap.comment);
+          buffer.log(stepDesc + lineStr);
+
+          if (step.result.status === 'failed') {
+            buffer.log(colorize(indent(2) + step.result.error_message + '\n', 'red'));
+            passed = false;
+          }
         }
-      }
 
-      if (step.hidden && step.result.status === 'failed') {
-        buffer.log(colorize(indent(2) + _.padEnd(step.keyword, maxStepLength) + indent(1), 'red'));
-        buffer.log(colorize(indent(2) + step.result.error_message + '\n', 'red'));
-      }
+        if (step.hidden && step.result.status === 'failed') {
+          buffer.log(colorize(indent(2) + _.padEnd(step.keyword, maxStepLength) + indent(1), 'red'));
+          buffer.log(colorize(indent(2) + step.result.error_message + '\n', 'red'));
+        }
 
-      if (step.result.status.toLowerCase() === 'undefined') {
-        this.undefinedSteps.push(step.keyword + step.name);
-      }
+        if (step.result.status.toLowerCase() === 'undefined') {
+          this.undefinedSteps.push(step.keyword + step.name);
+        }
 
-      if (this.stepStatuses[step.result.status]) {
-        this.stepStatuses[step.result.status]++;
+        if (this.stepStatuses[step.result.status]) {
+          this.stepStatuses[step.result.status]++;
+        } else {
+          this.stepStatuses[step.result.status] = 1;
+        }
+
+        this.totalSteps++;
+      });
+
+      if (passed) {
+        this.scenarioStatuses.passed++;
       } else {
-        this.stepStatuses[step.result.status] = 1;
+        this.failedScenarios.push(featureFile + ':' + scenario.line + ' # ' + scenario.name);
+        this.scenarioStatuses.failed++;
       }
 
-      this.totalSteps++;
+      this.totalScenarios++;
     });
-
-    if (passed) {
-      this.scenarioStatuses.passed++;
-    } else {
-      this.failedScenarios.push(featureFile + ':' + scenario.line + ' # ' + scenario.name);
-      this.scenarioStatuses.failed++;
-    }
-
-    this.totalScenarios++;
 
     return buffer.dump();
   }
