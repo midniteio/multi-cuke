@@ -9,10 +9,12 @@ chai.should();
 import TestHandler from '../src/lib/test-handler';
 import options from './fixtures/options';
 
+const timeoutMs = 12000;
+
 describe('Test Handler', function() {
   it('should wait for all children to exit before returning', function () {
     var opts = options.default;
-    this.timeout(5000);
+    this.timeout(timeoutMs);
     fs.ensureDir(opts.logDir);
 
     let cukeRunner = new TestHandler(opts);
@@ -24,7 +26,7 @@ describe('Test Handler', function() {
 
   it('should return the overall exit code when all tests finish', function () {
     var opts = options.default;
-    this.timeout(5000);
+    this.timeout(timeoutMs);
     fs.ensureDir(opts.logDir);
 
     function nonInjectedExitCode() {
@@ -46,7 +48,7 @@ describe('Test Handler', function() {
 
   it('should return the output handler', function () {
     var opts = options.default;
-    this.timeout(5000);
+    this.timeout(timeoutMs);
     fs.ensureDir(opts.logDir);
 
     let cukeRunner = new TestHandler(opts);
@@ -57,7 +59,7 @@ describe('Test Handler', function() {
 
   it('should have the summary available from the ouput handler ', function () {
     var opts = options.default;
-    this.timeout(5000);
+    this.timeout(timeoutMs);
     fs.ensureDir(opts.logDir);
 
     let cukeRunner = new TestHandler(opts);
@@ -68,7 +70,7 @@ describe('Test Handler', function() {
 
   it('should generate a merged json log', function () {
     var opts = options.default;
-    this.timeout(5000);
+    this.timeout(timeoutMs);
     fs.ensureDir(opts.logDir);
     let mergedFilePath = path.join(opts.logDir, 'merged', 'results.json');
 
