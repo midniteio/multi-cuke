@@ -22,10 +22,26 @@ export default function(cucumberOptions) {
       let featureData = parseFeature(file);
       return featureData.children
         .filter((child) => {
-          return (child.type === "Scenario" || child.type === "ScenarioOutline")
+          return (child.type === 'Scenario' || child.type === 'ScenarioOutline')
                  && verifyTags(child, cucumberOptions.tags);
         })
         .map((scenario) => {
+/*eslint-disable max-nested-callbacks*/
+          if (scenario.type === 'ScenarioOutline') {
+            return scenario.examples.map((example) => {
+              return example.tableBody.filter((tableBody) => {
+                return tableBody.type === 'TableRow';
+              })
+              .map((row) => {
+                return {
+                  featureFile: path.relative(process.cwd(), file),
+                  scenarioLine: row.location.line
+                };
+              });
+            });
+          }
+/*eslint-enable max-nested-callbacks*/
+
           return {
             featureFile: path.relative(process.cwd(), file),
             scenarioLine: scenario.location.line

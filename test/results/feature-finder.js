@@ -17,6 +17,14 @@ module.exports = {
     {
       featureFile: path.join('test', 'features', 'sample2.feature'),
       scenarioLine: 4
+    },
+    {
+      featureFile: path.join('test','features','sample3.feature'),
+      scenarioLine: 7
+    },
+    {
+      featureFile: path.join('test','features','sample3.feature'),
+      scenarioLine: 8
     }
   ],
   tagged: [
@@ -45,6 +53,14 @@ module.exports = {
     {
       featureFile: path.join('test', 'features', 'sample2.feature'),
       scenarioLine: 4
+    },
+    {
+      featureFile: path.join('test','features','sample3.feature'),
+      scenarioLine: 7
+    },
+    {
+      featureFile: path.join('test','features','sample3.feature'),
+      scenarioLine: 8
     }
   ],
   multipleTags: [
