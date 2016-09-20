@@ -91,6 +91,7 @@ export default class TestHandler {
     let testOptions = {
       featureFile: scenario.featureFile,
       scenarioLine: scenario.scenarioLine,
+      isScenarioOutline: scenario.isScenarioOutline,
       logDir: this.options.logDir,
       cucumberPath: this.options.cucumberPath.replace('lib', 'bin'),
       requires: this.options.requires,

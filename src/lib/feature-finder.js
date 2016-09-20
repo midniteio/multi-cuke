@@ -33,7 +33,8 @@ export default function(cucumberOptions) {
               .map((row) => {
                 return {
                   featureFile: path.relative(process.cwd(), file),
-                  scenarioLine: row.location.line
+                  scenarioLine: row.location.line,
+                  isScenarioOutline: true
                 };
               });
             });
@@ -42,7 +43,8 @@ export default function(cucumberOptions) {
 
           return {
             featureFile: path.relative(process.cwd(), file),
-            scenarioLine: scenario.location.line
+            scenarioLine: scenario.location.line,
+            isScenarioOutline: false
           };
         });
     });

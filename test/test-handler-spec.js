@@ -9,7 +9,7 @@ chai.should();
 import TestHandler from '../src/lib/test-handler';
 import options from './fixtures/options';
 
-const timeoutMs = 12000;
+const timeoutMs = 20000;
 
 describe('Test Handler', function() {
   it('should wait for all children to exit before returning', function () {

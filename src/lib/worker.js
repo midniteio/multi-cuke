@@ -11,11 +11,19 @@ export default class Worker {
     this.scenario = options.scenario;
     this.scenarioLine = options.scenarioLine;
     this.featureFile = options.featureFile;
+    this.isScenarioOutline = options.isScenarioOutline;
 
     let file = fs.readFileSync(this.featureFile, { encoding: 'utf8' });
 
     this.featureData = gherkinParser.parse(file).feature;
     this.scenarioData = this.featureData.children.filter((scenario) => {
+      if (this.isScenarioOutline) {
+        return scenario.type === 'ScenarioOutline' && scenario.examples.some((example) => {
+          return example.tableBody.some((row) => {
+            return row.location.line === parseInt(this.scenarioLine);
+          });
+        });
+      }
       return (scenario.location.line === parseInt(this.scenarioLine));
     }).pop();
 
