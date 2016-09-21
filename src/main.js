@@ -11,7 +11,12 @@ if (!module.parent) {
 
   run(cliOptions).then((results) => {
     if (results.outputHandler) {
-      console.log(results.outputHandler.getSummaryOutput());
+      try {
+        console.log(results.outputHandler.getSummaryOutput());
+      } catch(e) {
+        console.error('Exception while printing results: ', e);
+        results.exitCode = 1;
+      }
     }
     process.exit(results.exitCode);
   });
