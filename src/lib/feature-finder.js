@@ -62,7 +62,7 @@ function parseFeature(featurePath) {
     let file = fs.readFileSync(featurePath, {encoding: 'utf8'});
     return gherkinParser.parse(file).feature;
   } catch (e) {
-    console.error(featurePath + ' could not be parsed from Gherkin, ignoring as a feature file.\n', e.message);
+    console.error(featurePath + ' could not be parsed from Gherkin, ignoring as a feature file.', e.message);
     return {children: [], didDetectErrors: true};
   }
 }
