@@ -9,6 +9,7 @@ let promiseGlob = Promise.promisify(glob);
 let gherkinParser = new Gherkin.Parser();
 
 export default function(cucumberOptions) {
+  let didDetectErrors = false;
   return Promise.map(cucumberOptions.paths, (featurePath) => {
     if (path.parse(featurePath).ext) {
       return Promise.resolve(featurePath);
@@ -19,8 +20,9 @@ export default function(cucumberOptions) {
   .then((files) => {
     files = _.flattenDeep(files);
     return files.map((file) => {
-      let featureData = parseFeature(file);
-      return featureData.children
+      let parsedData = parseFeature(file);
+      didDetectErrors = parsedData.didDetectErrors ? true : didDetectErrors;
+      return parsedData.children
         .filter((child) => {
           return (child.type === 'Scenario' || child.type === 'ScenarioOutline')
                  && verifyTags(child, cucumberOptions.tags);
@@ -50,7 +52,7 @@ export default function(cucumberOptions) {
     });
   })
   .then((results) => {
-    return _.flattenDeep(results);
+    return {scenarios:_.flattenDeep(results), didDetectErrors};
   });
 };
 
@@ -59,8 +61,8 @@ function parseFeature(featurePath) {
     let file = fs.readFileSync(featurePath, {encoding: 'utf8'});
     return gherkinParser.parse(file).feature;
   } catch (e) {
-    console.log(featurePath + ' could not be parsed from Gherkin, ignoring as a feature file.', e);
-    return {children: []};
+    console.error(featurePath + ' could not be parsed from Gherkin, ignoring as a feature file.', e.message);
+    return {children: [], didDetectErrors: true};
   }
 }
 
