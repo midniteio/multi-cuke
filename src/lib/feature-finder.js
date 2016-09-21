@@ -30,7 +30,6 @@ export default function(cucumberOptions) {
         .map((scenario) => {
 /*eslint-disable max-nested-callbacks*/
           if (scenario.type === 'ScenarioOutline') {
-
             return scenario.examples.map((example) => {
               return example.tableBody.filter(tableBody => tableBody.type === 'TableRow')
               .map((row) => {
