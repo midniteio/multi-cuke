@@ -54,7 +54,6 @@ export default class Worker {
       } catch (e) {
         e.msg = 'Cucumber has failed to produce parseable results.' + e.msg;
         err = err || e;
-        exitCode = 1;
       }
     }
 

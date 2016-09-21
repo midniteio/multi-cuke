@@ -51,7 +51,16 @@ export default class PrettyParser {
             indent(2) + _.padEnd(step.keyword + step.name, maxStepLength) + indent(1),
             colorMap[step.result.status]
             );
-          let lineStr = colorize('# ' + featureFile + ':' + step.line, colorMap.comment);
+
+          let stepSource;
+          if (_.isEmpty(step.match)) {
+            // undefined and abiguous steps
+            stepSource = featureFile + ':' + step.line;
+          } else {
+            stepSource = path.relative(process.cwd(), step.match.location);
+          }
+
+          let lineStr = colorize('# ' + stepSource, colorMap.comment);
           buffer.log(stepDesc + lineStr);
 
           if (step.result.status === 'failed') {
