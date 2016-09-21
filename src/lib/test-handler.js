@@ -38,12 +38,18 @@ export default class TestHandler {
   }
 
   runTestSuite() {
-    return featureFinder(this.options).then((scenarios) => {
-      this.verboseLogger.log('Scenarios found that match options:');
-      this.verboseLogger.logScenarios(scenarios);
+    return featureFinder(this.options).then((result) => {
+      if (result.detectedErrors) {
+        this.overallExitCode = 1;
+      }
 
+      let scenarios = result.scenarios;
       if (_.isEmpty(scenarios)) {
         console.log('There are no scenarios found that match the options passed: \n', this.options);
+        this.outputHandler.setEndTime();
+      } else {
+        this.verboseLogger.log('Scenarios found that match options:');
+        this.verboseLogger.logScenarios(scenarios);
       }
 
       this.scenarios = scenarios;
