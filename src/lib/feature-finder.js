@@ -53,7 +53,7 @@ export default function(cucumberOptions) {
     });
   })
   .then((results) => {
-    return {scenarios:_.flattenDeep(results), didDetectErrors: didDetectErrors};
+    return {scenarios:_.flattenDeep(results), didDetectErrors};
   });
 };
 
