@@ -32,7 +32,7 @@ export default class Worker {
     this.relativeLogFile = path.relative(process.cwd(), this.logFile);
 
     this.cucumberPath = options.cucumberPath;
-    this.args = [this.cucumberPath, this.featureFile + ':' + this.scenarioLine, '-f', 'json:' + this.relativeLogFile];
+    this.args = [this.cucumberPath, this.featureFile + ':' + this.scenarioLine, '-f', 'json'];
 
     options.requires.forEach((arg) => {
       this.args.push('-r');
@@ -46,18 +46,19 @@ export default class Worker {
     }
   }
 
-  formatResults(exitCode, startTime, err) {
+  formatResults(exitCode, startTime, out, err) {
     let results = null;
     if (!err) {
       try {
-        results = fs.readJsonSync(this.logFile).pop();
+        results = JSON.parse(JSON.stringify(out)).pop();
       } catch (e) {
+        console.log('JDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
         e.msg = 'Cucumber has failed to produce parseable results.' + e.msg;
         err = err || e;
         exitCode = 1;
       }
     }
-
+    console.log(results)
     return {
       type: 'result',
       exitCode: exitCode,
@@ -73,7 +74,7 @@ export default class Worker {
     return new Promise((resolve) => {
       let startTime = new Date();
       let cucumberOut = '';
-      let cucumberError;
+      let cucumberError = '';
 
       this.child = spawn(
         process.execPath,
@@ -82,11 +83,11 @@ export default class Worker {
       );
 
       this.child.on('exit', (code) => {
-        resolve(this.formatResults(code, startTime, cucumberError));
+        resolve(this.formatResults(code, startTime, cucumberOut, cucumberError));
       });
 
       this.child.on('error', (err) => {
-        resolve(this.formatResults(1, startTime, cucumberOut + '\n' + err));
+        resolve(this.formatResults(1, startTime, cucumberOut, cucumberError));
       });
 
       this.child.stdout.on('data', (data) => {
@@ -94,7 +95,8 @@ export default class Worker {
       });
 
       this.child.stderr.on('data', (data) => {
-        cucumberError = cucumberOut + data;
+        cucumberError = cucumberError + data;
+        console.log('Error', cucumberError);
       });
     });
   }
