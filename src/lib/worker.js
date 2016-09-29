@@ -70,7 +70,6 @@ export default class Worker {
   execute() {
     return new Promise((resolve) => {
       let startTime = new Date();
-      let cucumberOut = '';
       let cucumberError = '';
 
       this.child = spawn(
@@ -84,15 +83,11 @@ export default class Worker {
       });
 
       this.child.on('error', (err) => {
-        resolve(this.formatResults(1, startTime, cucumberOut + '\n' + err));
-      });
-
-      this.child.stdout.on('data', (data) => {
-        cucumberOut = cucumberOut + data;
+        resolve(this.formatResults(1, startTime, cucumberError + '\n' + err));
       });
 
       this.child.stderr.on('data', (data) => {
-        cucumberError = cucumberError + data;
+        cucumberError = cucumberError + '\n' + data;
       });
     });
   }

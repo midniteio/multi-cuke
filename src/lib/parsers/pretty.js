@@ -25,7 +25,8 @@ export default class PrettyParser {
     this.totalDuration += payload.duration;
     if (payload.results) {
       // format the test results and add any messages that were sent to stderr
-      return this.parseResult(payload.results) + payload.exception;
+      return this.parseResult(payload.results) +
+      colorize('\nWarnings/Non fatal erros:' + payload.exception, 'yellow');
     } else {
       return this.parseException(payload.feature, payload.scenario, payload.exception);
     }
