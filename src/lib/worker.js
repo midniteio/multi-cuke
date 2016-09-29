@@ -48,14 +48,12 @@ export default class Worker {
 
   formatResults(exitCode, startTime, err) {
     let results = null;
-    if (!err) {
-      try {
-        results = fs.readJsonSync(this.logFile).pop();
-      } catch (e) {
-        e.msg = 'Cucumber has failed to produce parseable results.' + e.msg;
-        err = err || e;
-        exitCode = 1;
-      }
+    try {
+      results = fs.readJsonSync(this.logFile).pop();
+    } catch (e) {
+      e.msg = 'Cucumber has failed to produce parseable results.' + e.msg;
+      err = err || e;
+      exitCode = 1;
     }
 
     return {
@@ -73,7 +71,7 @@ export default class Worker {
     return new Promise((resolve) => {
       let startTime = new Date();
       let cucumberOut = '';
-      let cucumberError;
+      let cucumberError = '';
 
       this.child = spawn(
         process.execPath,
@@ -94,7 +92,7 @@ export default class Worker {
       });
 
       this.child.stderr.on('data', (data) => {
-        cucumberError = cucumberOut + data;
+        cucumberError = cucumberError + data;
       });
     });
   }
