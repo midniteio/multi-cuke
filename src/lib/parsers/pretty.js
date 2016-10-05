@@ -27,7 +27,7 @@ export default class PrettyParser {
       // format the test results and add any messages that were sent to stderr
       let formattedOutput = this.parseResult(payload.results);
       if (payload.exception) {
-        formattedOutput += colorize('\nWarnings/Non fatal erros:' + payload.exception, 'yellow');
+        formattedOutput += colorize('\nWarnings/Non fatal errors:' + payload.exception, 'yellow');
       }
       return formattedOutput;
     } else {
