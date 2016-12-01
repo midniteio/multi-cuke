@@ -40,7 +40,8 @@ function run(options) {
     'silentSummary': false,
     'verbose': false,
     'inlineStream': false,
-    'devMode': false
+    'devMode': false,
+    'strict': false
   });
 
   if (options.devMode) {
