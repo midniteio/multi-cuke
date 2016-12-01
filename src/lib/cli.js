@@ -39,5 +39,6 @@ export const args = {
   logdir: program.logdir,
   silentSummary: program.silentsummary,
   verbose: program.verbose,
-  inlineStream: program.inlinestream
+  inlineStream: program.inlinestream,
+  strict: program.strict
 };
