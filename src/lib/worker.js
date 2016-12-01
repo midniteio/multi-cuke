@@ -33,6 +33,9 @@ export default class Worker {
 
     this.cucumberPath = options.cucumberPath;
     this.args = [this.cucumberPath, this.featureFile + ':' + this.scenarioLine, '-f', 'json:' + this.relativeLogFile];
+    if (options.strict) {
+      this.args.push('--strict');
+    }
 
     options.requires.forEach((arg) => {
       this.args.push('-r');

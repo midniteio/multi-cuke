@@ -27,6 +27,7 @@ program
     '*Note* This adds complexity to the logs that are hard to decipher, but included if needed for debugging'
   )
   .option('-d, --devMode', 'Shortcut for running cucumber-js directly')
+  .option('--strict', 'Fail fast if a step is undefined')
   .parse(process.argv);
 
 export const args = {
