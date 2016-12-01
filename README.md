@@ -29,7 +29,8 @@ multi-cuke takes an options object as a parameter, but when none is passed will 
   'verbose': false,
   'inlineStream': false,
   'failFast': false,
-  'devMode': false
+  'devMode': false,
+  'strict': false
 }
 ```
 The options object passed is extended with default values via lodash's `_.default()` utility, so passing all options are not required, and passing simply
@@ -103,6 +104,7 @@ multi-cuke comes ready to use from command line. It supports arguments of both f
   --fail-fast             Abort the run on first failure
   -i, --inlinestream      Inlines stream in real time in addition to multi-cuke output. *Note* This adds complexity to the logs that are hard to decipher, but included if needed for debugging
   -d, --devMode           Shortcut to running cucumber-js directly
+  --strict                Fail if a step definition is not defined
 
 ```
 All of the above options can also be found by using the `--help` flag on the command line.
