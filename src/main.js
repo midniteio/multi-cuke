@@ -55,6 +55,9 @@ function run(options) {
       args.push('-r');
       args.push(arg);
     });
+    if (options.strict) {
+      args.push('--strict');
+    }
 
     return new Promise(function(resolve) {
       try {

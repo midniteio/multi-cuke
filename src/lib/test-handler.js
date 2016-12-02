@@ -102,7 +102,8 @@ export default class TestHandler {
       cucumberPath: this.options.cucumberPath.replace('lib', 'bin'),
       requires: this.options.requires,
       scenario: scenario,
-      inlineStream: this.options.inlineStream
+      inlineStream: this.options.inlineStream,
+      strict: this.options.strict
     };
 
     let worker = new Worker(testOptions);
