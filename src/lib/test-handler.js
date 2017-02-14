@@ -45,7 +45,9 @@ export default class TestHandler {
 
       let scenarios = result.scenarios;
       if (_.isEmpty(scenarios)) {
-        console.log('There are no scenarios found that match the options passed: \n', this.options);
+        console.warn('There are no scenarios found that match the options passed.');
+        this.verboseLogger.log('Options passed:');
+        this.verboseLogger.log(this.options);
         this.outputHandler.setEndTime();
       } else {
         this.verboseLogger.log('Scenarios found that match options:');
