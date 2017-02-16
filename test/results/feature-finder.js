@@ -6,17 +6,17 @@ module.exports = {
       {
         featureFile: path.join('test', 'features', 'sample.feature'),
         isScenarioOutline: false,
-        scenarioLine: 7
+        scenarioLine: 8
       },
       {
         featureFile: path.join('test', 'features', 'sample.feature'),
         isScenarioOutline: false,
-        scenarioLine: 11
+        scenarioLine: 12
       },
       {
         featureFile: path.join('test', 'features', 'sample.feature'),
         isScenarioOutline: false,
-        scenarioLine: 14
+        scenarioLine: 15
       },
       {
         featureFile: path.join('test', 'features', 'sample2.feature'),
@@ -41,12 +41,12 @@ module.exports = {
       {
         featureFile: path.join('test', 'features', 'sample.feature'),
         isScenarioOutline: false,
-        scenarioLine: 7
+        scenarioLine: 8
       },
       {
         featureFile: path.join('test', 'features', 'sample.feature'),
         isScenarioOutline: false,
-        scenarioLine: 11
+        scenarioLine: 12
       },
       {
         featureFile: path.join('test', 'features', 'sample2.feature'),
@@ -61,12 +61,12 @@ module.exports = {
       {
         featureFile: path.join('test', 'features', 'sample.feature'),
         isScenarioOutline: false,
-        scenarioLine: 7
+        scenarioLine: 8
       },
       {
         featureFile: path.join('test', 'features', 'sample.feature'),
         isScenarioOutline: false,
-        scenarioLine: 14
+        scenarioLine: 15
       },
       {
         featureFile: path.join('test', 'features', 'sample2.feature'),
@@ -91,7 +91,27 @@ module.exports = {
       {
         featureFile: path.join('test', 'features', 'sample.feature'),
         isScenarioOutline: false,
-        scenarioLine: 7
+        scenarioLine: 8
+      }
+    ],
+    didDetectErrors: false
+  },
+  featureTags: {
+    scenarios: [
+      {
+        featureFile: path.join('test', 'features', 'sample.feature'),
+        isScenarioOutline: false,
+        scenarioLine: 8
+      },
+      {
+        featureFile: path.join('test', 'features', 'sample.feature'),
+        isScenarioOutline: false,
+        scenarioLine: 12
+      },
+      {
+        featureFile: path.join('test', 'features', 'sample.feature'),
+        isScenarioOutline: false,
+        scenarioLine: 15
       }
     ],
     didDetectErrors: false
@@ -101,7 +121,7 @@ module.exports = {
       {
         featureFile: path.join('test', 'features', 'sample.feature'),
         isScenarioOutline: false,
-        scenarioLine: 7
+        scenarioLine: 8
       }
     ],
     didDetectErrors: false
@@ -111,12 +131,12 @@ module.exports = {
       {
         featureFile: path.join('test', 'features', 'sample.feature'),
         isScenarioOutline: false,
-        scenarioLine: 7
+        scenarioLine: 8
       },
       {
         featureFile: path.join('test', 'features', 'sample.feature'),
         isScenarioOutline: false,
-        scenarioLine: 11
+        scenarioLine: 12
       },
       {
         featureFile: path.join('test', 'features', 'sample2.feature'),
@@ -131,17 +151,17 @@ module.exports = {
       {
         featureFile: path.join('test', 'features', 'sample.feature'),
         isScenarioOutline: false,
-        scenarioLine: 7
+        scenarioLine: 8
       },
       {
         featureFile: path.join('test', 'features', 'sample.feature'),
         isScenarioOutline: false,
-        scenarioLine: 11
+        scenarioLine: 12
       },
       {
         featureFile: path.join('test', 'features', 'sample.feature'),
         isScenarioOutline: false,
-        scenarioLine: 14
+        scenarioLine: 15
       }
     ],
     didDetectErrors: false
@@ -151,17 +171,17 @@ module.exports = {
       {
         featureFile: path.join('test', 'features', 'sample.feature'),
         isScenarioOutline: false,
-        scenarioLine: 7
+        scenarioLine: 8
       },
       {
         featureFile: path.join('test', 'features', 'sample.feature'),
         isScenarioOutline: false,
-        scenarioLine: 11
+        scenarioLine: 12
       },
       {
         featureFile: path.join('test', 'features', 'sample.feature'),
         isScenarioOutline: false,
-        scenarioLine: 14
+        scenarioLine: 15
       },
       {
         featureFile: path.join('test', 'features', 'sample2.feature'),

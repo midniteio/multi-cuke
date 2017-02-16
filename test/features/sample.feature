@@ -1,3 +1,4 @@
+@FeatureTag
 Feature: Sample Feature 1
 
 Background:

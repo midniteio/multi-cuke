@@ -35,6 +35,15 @@ module.exports = {
     logDir: '.unit-test-tmp',
     silentSummary: true
   },
+  featureTags: {
+    paths: ['test/features'],
+    tags: ['@FeatureTag'],
+    requires: [],
+    cucumberPath: require.resolve('cucumber'),
+    workers: 1,
+    logDir: '.unit-test-tmp',
+    silentSummary: true
+  },
   mixedTags: {
     paths: ['test/features'],
     tags: ['@Secondary', '~@Ignore'],

@@ -25,25 +25,25 @@ describe('Test Handler', function() {
   });
 
   it('should return the overall exit code when all tests finish', function () {
-    var opts = options.default;
     this.timeout(timeoutMs);
-    fs.ensureDir(opts.logDir);
+    fs.ensureDir(options.default.logDir);
 
     function nonInjectedExitCode() {
-      let cukeRunner = new TestHandler(opts);
+      let cukeRunner = new TestHandler(options.default);
       return cukeRunner.run();
     }
 
     function injectedExitCode() {
-      let injectedCukeRunner = new TestHandler(opts);
+      let injectedCukeRunner = new TestHandler(options.tagged);
       injectedCukeRunner.overallExitCode = 10;
       return injectedCukeRunner.run();
     }
 
-    return Promise.all([
-      nonInjectedExitCode().should.eventually.have.deep.property('exitCode').and.to.be.equal(0),
-      injectedExitCode().should.eventually.have.deep.property('exitCode').and.to.be.equal(10)
-    ]);
+    return Promise.all([ nonInjectedExitCode(), injectedExitCode() ])
+    .then(([ cleanRun, injectedRun]) => {
+      cleanRun.should.have.deep.property('exitCode').and.to.be.equal(0);
+      injectedRun.should.have.deep.property('exitCode').and.to.be.equal(10);
+    });
   });
 
   it('should return the output handler', function () {
