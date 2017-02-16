@@ -33,6 +33,12 @@ describe('Feature Finder', function(){
     return featureFinder(opts).should.eventually.deep.equal(expectedResult);
   });
 
+  it('should support feature tags', function () {
+    var opts = options.featureTags;
+    var expectedResult = results.featureTags;
+    return featureFinder(opts).should.eventually.deep.equal(expectedResult);
+  });
+
   it('should support mixed tags', function () {
     var opts = options.mixedTags;
     var expectedResult = results.mixedTags;

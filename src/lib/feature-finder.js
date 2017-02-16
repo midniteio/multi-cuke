@@ -21,11 +21,12 @@ export default function(cucumberOptions) {
     files = _.flattenDeep(files);
     return files.map((file) => {
       let parsedData = parseFeature(file);
+      let featureTags = _.map(parsedData.tags, 'name');
       didDetectErrors = parsedData.didDetectErrors ? true : didDetectErrors;
       return parsedData.children
         .filter((child) => {
           return (child.type === 'Scenario' || child.type === 'ScenarioOutline')
-                 && verifyTags(child, cucumberOptions.tags);
+                 && verifyTags(child, featureTags, cucumberOptions.tags);
         })
         .map((scenario) => {
 /*eslint-disable max-nested-callbacks*/
@@ -66,8 +67,8 @@ function parseFeature(featurePath) {
   }
 }
 
-function verifyTags(scenario, tags) {
-  let scenarioTags = _.map(scenario.tags, 'name');
+function verifyTags(scenario, featureTags, tags) {
+  let scenarioTags = [..._.map(scenario.tags, 'name'), ...featureTags];
   var results = _.map(tags, (tag) => {
     if (tag.indexOf(',') !== 0) {
       var orOperatorTags = tag.split(',');

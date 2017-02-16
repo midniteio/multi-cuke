@@ -12,7 +12,7 @@ const featureOutput = require('./fixtures/sample-feature-output.json').pop();
 const gherkinParser = new Gherkin.Parser();
 const feature = gherkinParser.parse(featureFileData).feature;
 const scenario = feature.children.filter((child) => {
-  return (child.location.line === 7);
+  return (child.location.line === 8);
 }).pop();
 
 describe('Pretty parser', function() {
