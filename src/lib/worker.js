@@ -3,6 +3,7 @@ import {spawn} from 'child_process';
 import fs from 'fs-extra';
 import Gherkin from 'gherkin';
 import Promise from 'bluebird';
+import _ from 'lodash';
 
 const gherkinParser = new Gherkin.Parser();
 
@@ -26,7 +27,9 @@ export default class Worker {
     })[0];
 
     this.exampleData = this.isScenarioOutline && this.scenarioData.examples.map(({ tableBody }) => {
-      return tableBody.find(({ cells }) => cells.find(cell => cell.location.line === parseInt(this.scenarioLine)));
+      return _.find(tableBody, ({ cells }) => {
+        return _.find(cells, cell => cell.location.line === parseInt(this.scenarioLine));
+      });
     })[0].cells[0];
 
     this.logFileName = path.basename(this.featureFile) + '-line-' + this.scenarioLine + '.json';
