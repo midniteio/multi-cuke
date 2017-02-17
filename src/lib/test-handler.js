@@ -80,17 +80,23 @@ export default class TestHandler {
     logFilePaths.forEach((logFilePath) => {
       try {
         if (_.endsWith(logFilePath, '.json')) {
-          testResults = _.concat(
-            testResults,
-            fs.readJsonSync(path.join(this.options.logDir, logFilePath), 'utf8')
-          );
+          let log = fs.readJsonSync(path.join(this.options.logDir, logFilePath), 'utf8')[0];
+          let existingLog = _.find(testResults, testResult => {
+            return testResult.name === log.name && testResult.line === log.line;
+          });
+
+          if (existingLog) {
+            existingLog.elements.push(log.elements[0]);
+          } else {
+            testResults = _.concat(testResults, [log]);
+          }
         }
       } catch (e) {
         // ignore errors from invalid/empty files
       }
     });
     fs.ensureDirSync(path.join(this.options.logDir, 'merged'));
-    fs.writeFileSync(mergedFileName, JSON.stringify(testResults, null, 4));
+    fs.writeJsonSync(mergedFileName, testResults);
   }
 
   createWorker(scenario) {
