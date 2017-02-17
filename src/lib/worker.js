@@ -16,16 +16,18 @@ export default class Worker {
     let file = fs.readFileSync(this.featureFile, { encoding: 'utf8' });
 
     this.featureData = gherkinParser.parse(file).feature;
-    this.scenarioData = this.featureData.children.filter((scenario) => {
+    this.scenarioData = this.featureData.children.filter(scenario => {
       if (this.isScenarioOutline) {
-        return scenario.type === 'ScenarioOutline' && scenario.examples.some((example) => {
-          return example.tableBody.some((row) => {
-            return row.location.line === parseInt(this.scenarioLine);
-          });
+        return scenario.type === 'ScenarioOutline' && scenario.examples.some(example => {
+          return example.tableBody.some(row => row.location.line === parseInt(this.scenarioLine));
         });
       }
       return (scenario.location.line === parseInt(this.scenarioLine));
-    }).pop();
+    })[0];
+
+    this.exampleData = this.isScenarioOutline && this.scenarioData.examples.map(({ tableBody }) => {
+      return tableBody.find(({ cells }) => cells.find(cell => cell.location.line === parseInt(this.scenarioLine)));
+    })[0].cells[0];
 
     this.logFileName = path.basename(this.featureFile) + '-line-' + this.scenarioLine + '.json';
     this.logFile = path.join(options.logDir, this.logFileName);
@@ -53,6 +55,13 @@ export default class Worker {
     let results = null;
     try {
       results = fs.readJsonSync(this.logFile).pop();
+
+      // Inject example data into the results json as it's not provided by cucumber's formatter
+      // A custom formatter could be written in Cucumber v2.0.0+, but is unsupported in ^1.0.0
+      if (this.isScenarioOutline) {
+        results.elements[0].exampleData = this.exampleData.value;
+        fs.writeJsonSync(this.logFile, [ results ]);
+      }
     } catch (e) {
       e.msg = 'Cucumber has failed to produce parseable results.' + e.msg;
       err = err || e;
