@@ -8,8 +8,13 @@ multi-cuke is written in es6 that is transpiled via Babel. This happens on npm-i
 
 ### Using multi-cuke from another Node module
 multi-cuke is easily called from within your NodeJS source like any other NPM module:
-```javascript
-const multicuke = require('multi-cuke');
+```javascript 
+
+// Using Babel/es6
+import multicuke from 'multi-cuke';
+
+// Require 
+const multicuke = require('multi-cuke').default;
 multicuke();
 ```
 multi-cuke is Promise-based, and resolves a promise containing the exit code and the outputHandler when all have finished running. The outputHandler is returned as the summary data of the overall test suite run can be used in conjuction with other runs, if you would like to amass data across different test suites (See below for options and command-line args). Running from the command line will output the summary data then auto-exit with the returned exit code, while calling multi-cuke from a node module returns the promise that resolves to an exit code to be handled at your discretion. The promise is **not** rejected due to test scenario failures, but **is** rejected on errors in test execution to differentiate and provide clarity.
@@ -56,7 +61,7 @@ is as valid as passing all options.
 
 `workers` specifies the max number of parallel workers to be running at once. If no number passed, defaults to the number of cpu's available.
 
-`workerEnvVars` is an object that will be passed as environment variables to the cucumber-js worker process, and it's properties will be available to access in the spawned process via process.env.
+`workerEnvVars` is an object that will be passed as environment variables to the cucumber-js worker process, and it's properties will be available to access in the spawned process via process.env. The values for each key must be a string.
 
 `logDir` specifies the dir multi-cuke writes test log files to.
 
