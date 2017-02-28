@@ -110,7 +110,8 @@ export default class TestHandler {
       requires: this.options.requires,
       scenario: scenario,
       inlineStream: this.options.inlineStream,
-      strict: this.options.strict
+      strict: this.options.strict,
+      workerEnvVars: this.options.workerEnvVars
     };
 
     let worker = new Worker(testOptions);

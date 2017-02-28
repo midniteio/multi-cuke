@@ -52,6 +52,8 @@ export default class Worker {
     } else {
       this.ioMode = ['ignore', 'pipe', 'pipe'];
     }
+
+    this.workerEnvVars = options.workerEnvVars;
   }
 
   formatResults(exitCode, startTime, err) {
@@ -90,7 +92,10 @@ export default class Worker {
       this.child = spawn(
         process.execPath,
         this.args,
-        {stdio: this.ioMode}
+        {
+          env: Object.assign(process.env, this.workerEnvVars),
+          stdio: this.ioMode
+        }
       );
 
       this.child.on('exit', (code) => {
