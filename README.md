@@ -3,6 +3,13 @@
 
 It utilizes the Gherkin JS module as a parser to determine the entire set of scenarios that fit the passed arguments and spins up workers to run each- up to the number of available OS processor, or alternatively the passed number of workers (lesser of the two). As a test worker ends, a new worker is instantiated to handle the next scenario on the stack, until empty.
 
+---
+
+### If you need help
+Please reach out in our [Gitter chat](https://gitter.im/multi-cuke/Lobby) if you have questions, or feel free to open an issue.
+
+---
+
 ### Developing with multi-cuke ###
 multi-cuke is written in es6 that is transpiled via Babel. This happens on npm-install, where the compiled code is output to the `distribution` folder. If making changes, `npm run build` will re-compile the code. multi-cuke uses travis-ci for linting and unit testing, which performs `npm test` on all PR's prior to merging with the expectation that they pass.
 
