@@ -3,17 +3,23 @@
 
 It utilizes the Gherkin JS module as a parser to determine the entire set of scenarios that fit the passed arguments and spins up workers to run each- up to the number of available OS processor, or alternatively the passed number of workers (lesser of the two). As a test worker ends, a new worker is instantiated to handle the next scenario on the stack, until empty.
 
+---
+
+### If you need help
+Please reach out in our [Gitter chat](https://gitter.im/multi-cuke/Lobby) if you have questions, or feel free to open an issue.
+
+---
+
 ### Developing with multi-cuke ###
 multi-cuke is written in es6 that is transpiled via Babel. This happens on npm-install, where the compiled code is output to the `distribution` folder. If making changes, `npm run build` will re-compile the code. multi-cuke uses travis-ci for linting and unit testing, which performs `npm test` on all PR's prior to merging with the expectation that they pass.
 
 ### Using multi-cuke from another Node module
 multi-cuke is easily called from within your NodeJS source like any other NPM module:
 ```javascript 
-
 // Using Babel/es6
 import multicuke from 'multi-cuke';
 
-// Require 
+// Using Require 
 const multicuke = require('multi-cuke').default;
 multicuke();
 ```
@@ -106,9 +112,9 @@ multi-cuke comes ready to use from command line. It supports arguments of both f
   -l, --logdir            Output dir for test logs
   -s, --silent-summary    Silences summary output so it can be handled via the returned promise
   -v, --verbose           Adds verbose output to console
-  --fail-fast             Abort the run on first failure
   -i, --inlinestream      Inlines stream in real time in addition to multi-cuke output. *Note* This adds complexity to the logs that are hard to decipher, but included if needed for debugging
   -d, --devMode           Shortcut to running cucumber-js directly
+  --fail-fast             Abort the run on first failure
   --strict                Fail if a step definition is not defined
 
 ```

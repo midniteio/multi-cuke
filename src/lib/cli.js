@@ -21,12 +21,12 @@ program
   .option('-l, --logdir <path>', 'Output dir for test logs')
   .option('-s, --silentsummary', 'Silences summary output so it can be handled via the returned promise')
   .option('-v, --verbose', 'Adds verbose output to console')
-  .option('--fail-fast', 'abort the run on first failure')
   .option('-i, --inlinestream',
     'Inlines stream in real time in addition to multi-cuke output. ' +
     '*Note* This adds complexity to the logs that are hard to decipher, but included if needed for debugging'
   )
   .option('-d, --devMode', 'Shortcut for running cucumber-js directly')
+  .option('--fail-fast', 'abort the run on first failure')
   .option('--strict', 'Fail fast if a step is undefined')
   .parse(process.argv);
 
@@ -40,5 +40,7 @@ export const args = {
   silentSummary: program.silentsummary,
   verbose: program.verbose,
   inlineStream: program.inlinestream,
+  devMode: program.devMode,
+  failFast: program.failFast,
   strict: program.strict
 };
