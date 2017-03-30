@@ -68,7 +68,7 @@ describe('Test Handler', function() {
     });
   });
 
-  it('should generate a merged json log', function () {
+  it('should generate a merged json log by default', function () {
     var opts = options.default;
     this.timeout(timeoutMs);
     fs.ensureDir(opts.logDir);
@@ -79,5 +79,4 @@ describe('Test Handler', function() {
       chai.expect(fs.existsSync(mergedFilePath)).to.be.true;
     });
   });
-
 });

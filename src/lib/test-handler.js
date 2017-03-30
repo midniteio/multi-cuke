@@ -18,6 +18,7 @@ export default class TestHandler {
     this.options = options;
     this.overallExitCode = 0;
     this.summaryData = {};
+    this.mergedLog = options.mergedLog;
   }
 
   run() {
@@ -29,7 +30,9 @@ export default class TestHandler {
         return this.waitForChildren();
       })
       .then(() => {
-        this.mergeLogs();
+        if (this.mergedLog) {
+          this.mergeLogs();
+        }
         return {
           exitCode: this.overallExitCode,
           outputHandler: this.outputHandler
@@ -75,7 +78,7 @@ export default class TestHandler {
 
   mergeLogs() {
     let testResults = [];
-    let mergedFileName = path.join(this.options.logDir, 'merged', 'results.json');
+    let mergedFileName = path.join(this.options.logDir, this.mergedLog);
     let logFilePaths = fs.readdirSync(this.options.logDir);
     logFilePaths.forEach((logFilePath) => {
       try {
@@ -95,7 +98,7 @@ export default class TestHandler {
         // ignore errors from invalid/empty files
       }
     });
-    fs.ensureDirSync(path.join(this.options.logDir, 'merged'));
+    fs.ensureDirSync(path.dirname(mergedFileName));
     fs.writeJsonSync(mergedFileName, testResults);
   }
 

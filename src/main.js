@@ -1,4 +1,5 @@
 import fs from 'fs-extra';
+import path from 'path';
 import _ from 'lodash';
 import Promise from 'bluebird';
 import TestHandler from './lib/test-handler';
@@ -41,7 +42,8 @@ function run(options) {
     'verbose': false,
     'inlineStream': false,
     'devMode': false,
-    'strict': false
+    'strict': false,
+    'mergedLog': path.join('merged','results.json')
   });
 
   if (options.devMode) {
