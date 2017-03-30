@@ -28,6 +28,7 @@ program
   .option('-d, --devMode', 'Shortcut for running cucumber-js directly')
   .option('--fail-fast', 'abort the run on first failure')
   .option('--strict', 'Fail fast if a step is undefined')
+  .option('--createMergedLog', 'Create a log file with all the test results, in addition to the per test logs')
   .parse(process.argv);
 
 export const args = {
@@ -36,11 +37,12 @@ export const args = {
   requires: (program.require.length) ? program.require : undefined,
   cucumberPath: program.cucumber,
   workers: program.workers,
-  logdir: program.logdir,
+  logDir: program.logdir,
   silentSummary: program.silentsummary,
   verbose: program.verbose,
   inlineStream: program.inlinestream,
   devMode: program.devMode,
   failFast: program.failFast,
-  strict: program.strict
+  strict: program.strict,
+  createMergedLog: program.createMergedLog
 };
