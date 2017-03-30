@@ -41,7 +41,8 @@ function run(options) {
     'verbose': false,
     'inlineStream': false,
     'devMode': false,
-    'strict': false
+    'strict': false,
+    'createMergedLog': true
   });
 
   if (options.devMode) {
