@@ -28,7 +28,7 @@ program
   .option('-d, --devMode', 'Shortcut for running cucumber-js directly')
   .option('--fail-fast', 'abort the run on first failure')
   .option('--strict', 'Fail fast if a step is undefined')
-  .option('--mergedLog', 'Path, relative to logdir, to file where we will write the merged results of the run. Specify "" to not generate one.')
+  .option('--mergedLog', 'Path, relative to logdir, merged log. Specify "" to not generate one.')
   .parse(process.argv);
 
 export const args = {
