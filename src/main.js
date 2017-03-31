@@ -45,7 +45,6 @@ function run(options) {
     'strict': false,
     'mergedLog': path.join('merged','results.json')
   });
-
   if (options.devMode) {
     let cucumber = require(options.cucumberPath).Cli;
     let args = _.concat(['', ''], options.paths);

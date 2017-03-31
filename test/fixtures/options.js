@@ -6,7 +6,8 @@ module.exports = {
     cucumberPath: require.resolve('cucumber'),
     workers: 1,
     logDir: '.unit-test-tmp',
-    silentSummary: true
+    silentSummary: true,
+    mergedLog: 'merged/results.json'
   },
   tagged: {
     paths: ['test/features'],
