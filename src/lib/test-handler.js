@@ -78,7 +78,6 @@ export default class TestHandler {
 
   mergeLogs() {
     let testResults = [];
-    let mergedFileName = path.join(this.options.logDir, this.mergedLog);
     let logFilePaths = fs.readdirSync(this.options.logDir);
     logFilePaths.forEach((logFilePath) => {
       try {
@@ -98,8 +97,8 @@ export default class TestHandler {
         // ignore errors from invalid/empty files
       }
     });
-    fs.ensureDirSync(path.dirname(mergedFileName));
-    fs.writeJsonSync(mergedFileName, testResults);
+    fs.ensureDirSync(path.dirname(this.mergedLog));
+    fs.writeJsonSync(this.mergedLog, testResults);
   }
 
   createWorker(scenario) {

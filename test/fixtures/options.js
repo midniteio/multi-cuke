@@ -1,13 +1,12 @@
 module.exports = {
-  default: {
+  singlePathNoTags: {
     paths: ['test/features'],
     tags: [],
     requires: [],
     cucumberPath: require.resolve('cucumber'),
     workers: 1,
     logDir: '.unit-test-tmp',
-    silentSummary: true,
-    mergedLog: 'merged/results.json'
+    silentSummary: true
   },
   tagged: {
     paths: ['test/features'],
