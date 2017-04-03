@@ -1,6 +1,7 @@
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import fs from 'fs-extra';
+import _ from 'lodash';
 
 chai.use(chaiAsPromised);
 chai.should();
@@ -85,11 +86,11 @@ describe('Test Handler', function() {
   });
 
   it('should not generate a merged json log if the mergedLog option is set to ""', function () {
-    var opts = defaultOptions;
-    this.timeout(timeoutMs);
-    let mergedFilePath = defaultOptions.mergedLog;
+    var opts = _.cloneDeep(defaultOptions);
     opts.mergedLog = "";
 
+    this.timeout(timeoutMs);
+    let mergedFilePath = defaultOptions.mergedLog;
     // Delete the file so that previous runs of the unit test don't cause false positives
     try {
       fs.removeSync(mergedFilePath);
