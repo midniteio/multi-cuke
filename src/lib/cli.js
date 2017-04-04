@@ -29,10 +29,27 @@ program
   .option('-d, --dev-mode', 'Shortcut for running cucumber-js directly')
   .option('--fail-fast', 'abort the run on first failure')
   .option('--strict', 'Fail fast if a step is undefined')
-  .option('--merged-log <path>', 'Path for merged log. Specify "" to not generate one. ' +
-    'Default: ' + defaultOptions.mergedLog
-  )
+  .option('--merged-log <path>', 'Path for merged log. Default: ' + defaultOptions.mergedLog)
+  .option('--disable-merged-log', 'Prevents the merged log from being written')
+  // Deprecated options to be deleted with v1.0.0
+  .option('--logdir <path>', 'DEPRECATED, use --log-dir instead')
+  .option('--silentsummary', 'DEPRECATED, use --silent-summary instead')
+  .option('--inlinestream', 'DEPRECATED, use --inline-stream instead')
+  .option('--devMode', 'DEPRECATED, use --dev-mode instead')
   .parse(process.argv);
+
+const deprecationFlags = [
+  {oldFlag: '--logdir', newFlag: '--log-dir'},
+  {oldFlag: '--silentsummary', newFlag: '--silent-summary'},
+  {oldFlag: '--inlinestream', newFlag: '--inline-stream'},
+  {oldFlag: '--devMode', newFlag: '--dev-mode'}
+];
+
+deprecationFlags.forEach(({oldFlag, newFlag}) => {
+  if (program.rawArgs.includes(oldFlag)) {
+    console.warn(`'${oldFlag}' is deprecated and will be removed in future versions. Please use '${newFlag}' instead`);
+  }
+});
 
 export const args = {
   paths: (program.args.length) ? program.args : undefined,
@@ -40,12 +57,13 @@ export const args = {
   requires: (program.require.length) ? program.require : undefined,
   cucumberPath: program.cucumber,
   workers: program.workers,
-  logDir: program.logDir,
-  silentSummary: program.silentSummary,
+  logDir: program.logDir || program.logdir,
+  silentSummary: program.silentSummary || program.silentsummary,
   verbose: program.verbose,
-  inlineStream: program.inlineStream,
+  inlineStream: program.inlineStream || program.inlinestream,
   devMode: program.devMode,
   failFast: program.failFast,
   strict: program.strict,
-  mergedLog: program.mergedLog
+  mergedLog: program.mergedLog,
+  disableMergedLog: program.disableMergedLog
 };

@@ -15,5 +15,6 @@ module.exports = {
   'inlineStream': false,
   'devMode': false,
   'strict': false,
-  'mergedLog': path.join(defaultLogDir, 'merged','results.json')
+  'mergedLog': path.join(defaultLogDir, 'merged','results.json'),
+  'disableMergedLog': false
 };

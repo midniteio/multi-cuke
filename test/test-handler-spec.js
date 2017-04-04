@@ -27,7 +27,7 @@ describe('Test Handler', function() {
 
   it('should return the overall exit code when all tests finish', function () {
     this.timeout(timeoutMs);
-    fs.ensureDir(defaultOptions.logDir);
+    fs.ensureDirSync(defaultOptions.logDir);
 
     function nonInjectedExitCode() {
       let cukeRunner = new TestHandler(defaultOptions);
@@ -35,7 +35,7 @@ describe('Test Handler', function() {
     }
 
     function injectedExitCode() {
-      fs.ensureDir(options.tagged.logDir);
+      fs.ensureDirSync(options.tagged.logDir);
       let injectedCukeRunner = new TestHandler(options.tagged);
       injectedCukeRunner.overallExitCode = 10;
       return injectedCukeRunner.run();
@@ -85,9 +85,9 @@ describe('Test Handler', function() {
     });
   });
 
-  it('should not generate a merged json log if the mergedLog option is set to ""', function () {
+  it('should not generate a merged json log if disableMergedLog is true', function () {
     var opts = _.cloneDeep(defaultOptions);
-    opts.mergedLog = "";
+    opts.disableMergedLog = true;
 
     this.timeout(timeoutMs);
     let mergedFilePath = defaultOptions.mergedLog;

@@ -19,6 +19,7 @@ export default class TestHandler {
     this.overallExitCode = 0;
     this.summaryData = {};
     this.mergedLog = options.mergedLog;
+    this.disableMergedLog = options.disableMergedLog;
   }
 
   run() {
@@ -30,7 +31,7 @@ export default class TestHandler {
         return this.waitForChildren();
       })
       .then(() => {
-        if (this.mergedLog) {
+        if (!this.disableMergedLog) {
           this.mergeLogs();
         }
         return {
