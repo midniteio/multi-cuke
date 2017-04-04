@@ -18,6 +18,8 @@ export default class TestHandler {
     this.options = options;
     this.overallExitCode = 0;
     this.summaryData = {};
+    this.mergedLog = options.mergedLog;
+    this.disableMergedLog = options.disableMergedLog;
   }
 
   run() {
@@ -29,7 +31,9 @@ export default class TestHandler {
         return this.waitForChildren();
       })
       .then(() => {
-        this.mergeLogs();
+        if (!this.disableMergedLog) {
+          this.mergeLogs();
+        }
         return {
           exitCode: this.overallExitCode,
           outputHandler: this.outputHandler
@@ -75,7 +79,6 @@ export default class TestHandler {
 
   mergeLogs() {
     let testResults = [];
-    let mergedFileName = path.join(this.options.logDir, 'merged', 'results.json');
     let logFilePaths = fs.readdirSync(this.options.logDir);
     logFilePaths.forEach((logFilePath) => {
       try {
@@ -95,8 +98,8 @@ export default class TestHandler {
         // ignore errors from invalid/empty files
       }
     });
-    fs.ensureDirSync(path.join(this.options.logDir, 'merged'));
-    fs.writeJsonSync(mergedFileName, testResults);
+    fs.ensureDirSync(path.dirname(this.mergedLog));
+    fs.writeJsonSync(this.mergedLog, testResults);
   }
 
   createWorker(scenario) {

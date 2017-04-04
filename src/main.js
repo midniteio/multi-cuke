@@ -3,6 +3,7 @@ import _ from 'lodash';
 import Promise from 'bluebird';
 import TestHandler from './lib/test-handler';
 import sigintHandler from './lib/sigint-handler';
+import defaultOptions from './lib/default-options';
 
 // Run if invoked from command line with CLI args
 if (!module.parent) {
@@ -29,21 +30,7 @@ export default function(options) {
 
 
 function run(options) {
-  _.defaults(options, {
-    'paths': ['features'],
-    'tags': [],
-    'requires': [],
-    'cucumberPath': require.resolve("cucumber"),
-    'workers': require('os').cpus().length,
-    'logDir': ".tmp-logs",
-    'workerEnvVars': {},
-    'silentSummary': false,
-    'verbose': false,
-    'inlineStream': false,
-    'devMode': false,
-    'strict': false
-  });
-
+  _.defaults(options, defaultOptions);
   if (options.devMode) {
     let cucumber = require(options.cucumberPath).Cli;
     let args = _.concat(['', ''], options.paths);

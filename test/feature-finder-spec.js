@@ -9,8 +9,8 @@ import options from './fixtures/options';
 import results from './results/feature-finder';
 
 describe('Feature Finder', function(){
-  it('should find all scenarios with default options', function () {
-    var opts = options.default;
+  it('should find all scenarios within a folder', function () {
+    var opts = options.singlePathNoTags;
     var expectedResult = results.default;
     return featureFinder(opts).should.eventually.deep.equal(expectedResult);
   });
